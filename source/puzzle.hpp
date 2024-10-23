@@ -23,7 +23,8 @@ namespace obj {
         std::vector<SDL_Texture *> backgrounds;
         int cur_level = 0;
         int cur_focus = 0;
-        SDL_Texture *game_textures[4];
+        SDL_Texture *game_textures[4] = {nullptr};
+        TTF_Font *font = nullptr;
     };
 
 }

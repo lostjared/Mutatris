@@ -16,6 +16,9 @@ namespace obj {
         for(int i = 0; i <= 3;  ++i) {
             SDL_DestroyTexture(game_textures[i]);
         }
+
+        if(font)
+            TTF_CloseFont(font);
     }
 
     void PuzzleObject::drawGrid(SDL_Renderer *renderer, SDL_Texture *texture, int focus) {
@@ -78,7 +81,7 @@ namespace obj {
         drawGrid(renderer, game_textures[2], 2);
         SDL_QueryTexture(game_textures[2], nullptr, nullptr, &width, &height);
         window_x = (1280/2) - (width/2);
-        window_y = (720/2);
+        window_y = (720/2)+5;
         SDL_Rect rc3 = { window_x, window_y, width, height };
         SDL_RenderCopyEx(renderer, game_textures[2], nullptr, &rc3, 0, nullptr, SDL_FLIP_VERTICAL);  
         
@@ -87,30 +90,100 @@ namespace obj {
         window_x = (1280)-width -32;
         window_y = (720/2)-(height/2);
         SDL_Rect rc4 = { window_x, window_y, width, height };
-        SDL_RenderCopyEx(renderer, game_textures[3], nullptr, &rc4, -90.0, nullptr, SDL_FLIP_NONE);  
+        SDL_RenderCopyEx(renderer, game_textures[3], nullptr, &rc4, 90.0, nullptr, SDL_FLIP_HORIZONTAL);  
+
+        util::printText(renderer, font, 25, 25, "Score: " + std::to_string(game.score), {255,255,255,255});
+        util::printText(renderer, font, 25, 55, "Direction: " + std::to_string(cur_focus), {255, 255, 255, 255});
     }
 
     void PuzzleObject::event(SDL_Renderer *renderer, SDL_Event &e)  {
         switch(e.type) {
             case SDL_KEYDOWN: {
-                switch(e.key.keysym.sym) {
-                    case SDLK_LEFT:
-                        game.grid[cur_focus].game_piece.moveLeft();
-                    break;
-                    case SDLK_RIGHT:
-                        game.grid[cur_focus].game_piece.moveRight(); 
-                    break;
-                    case SDLK_UP:
-                        game.grid[cur_focus].game_piece.shiftColors(); 
-                    break;
-                    case SDLK_DOWN:
-                        game.grid[cur_focus].game_piece.moveDown();
-                    break;
-                    case SDLK_a:
-                        game.grid[cur_focus].game_piece.shiftDirection();
-                    break;
-                    default:
-                    break;
+                if(cur_focus == 0) {
+                    switch(e.key.keysym.sym) {
+                        case SDLK_LEFT:
+                            game.grid[cur_focus].game_piece.moveLeft();
+                        break;
+                        case SDLK_RIGHT:
+                            game.grid[cur_focus].game_piece.moveRight(); 
+                        break;
+                        case SDLK_UP:
+                            game.grid[cur_focus].game_piece.shiftColors(); 
+                        break;
+                        case SDLK_DOWN:
+                            game.grid[cur_focus].game_piece.moveDown();
+                        break;
+                        case SDLK_a:
+                        case SDLK_SPACE:
+                            game.grid[cur_focus].game_piece.shiftDirection();
+                        break;
+                        default:
+                        break;
+                    }
+                } else if(cur_focus == 1) {
+                    switch(e.key.keysym.sym) {
+                        case SDLK_DOWN:
+                            game.grid[cur_focus].game_piece.moveLeft();
+                        break;
+                        case SDLK_UP:
+                            game.grid[cur_focus].game_piece.moveRight();     
+                        break;
+                        case SDLK_LEFT:
+                            game.grid[cur_focus].game_piece.shiftColors(); 
+                        break;
+                        case SDLK_RIGHT:
+                            game.grid[cur_focus].game_piece.moveDown();
+                        break;
+                        case SDLK_a:
+                        case SDLK_SPACE:
+                            game.grid[cur_focus].game_piece.shiftDirection();
+                        break;
+                        default:
+                        break;
+                    }
+
+                } else if(cur_focus == 2) {
+                    switch(e.key.keysym.sym) {
+                        case SDLK_DOWN:
+                            game.grid[cur_focus].game_piece.shiftColors();
+                        break;
+                        case SDLK_UP:
+                            game.grid[cur_focus].game_piece.moveDown();     
+                        break;
+                        case SDLK_LEFT:
+                            game.grid[cur_focus].game_piece.moveLeft(); 
+                        break;
+                        case SDLK_RIGHT:
+                            game.grid[cur_focus].game_piece.moveRight();
+                        break;
+                        case SDLK_a:
+                        case SDLK_SPACE:
+                            game.grid[cur_focus].game_piece.shiftDirection();
+                        break;
+                        default:
+                        break;
+                    }
+                } else if(cur_focus == 3) {
+                    switch(e.key.keysym.sym) {
+                        case SDLK_DOWN:
+                            game.grid[cur_focus].game_piece.moveLeft();
+                        break;
+                        case SDLK_UP:
+                            game.grid[cur_focus].game_piece.moveRight();     
+                        break;
+                        case SDLK_LEFT:
+                            game.grid[cur_focus].game_piece.moveDown(); 
+                        break;
+                        case SDLK_RIGHT:
+                            game.grid[cur_focus].game_piece.shiftColors();
+                        break;
+                        case SDLK_a:
+                        case SDLK_SPACE:
+                            game.grid[cur_focus].game_piece.shiftDirection();
+                        break;
+                        default:
+                        break;
+                    }
                 }
             }
             break;
@@ -140,6 +213,6 @@ namespace obj {
                 exit(EXIT_FAILURE);
             }
         }
-
+        font = util::loadFont("font.ttf", 32);
     }
 }

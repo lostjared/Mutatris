@@ -70,8 +70,11 @@ namespace puzzle {
 	class PuzzleGame  {
 	public:
 		PuzzleGame();
-		GameGrid grid[4];
 		void setCallback (Callback callback);
+
+		GameGrid grid[4];
+		int score = 0;
+		
 	};
 
 }

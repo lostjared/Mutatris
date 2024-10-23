@@ -104,7 +104,8 @@ namespace puzzle {
 		
     void Piece::moveDown() {
         if(checkLocation(x, y+1)) {
-            if(y < grid->height()-3) {
+            int stop = (direction == 0) ? 3 : 0;
+            if(y < grid->height()-stop) {
                 y++;
             } else {
                 setBlock();
@@ -235,7 +236,7 @@ namespace puzzle {
 
     PuzzleGame::PuzzleGame() {
         grid[0].initGrid(12, (720/16/2)+1);
-        grid[1].initGrid(12, 29);
+        grid[1].initGrid(12, 28);
         grid[2].initGrid(12, 720/16/2);
         grid[3].initGrid(12, 28);
     }
