@@ -17,8 +17,9 @@ namespace obj {
     }
 
     IntroObject::~IntroObject() {
-        if(logo != nullptr)
+        if(logo != nullptr) {
             SDL_DestroyTexture(logo);
+        }
     }
 
 }

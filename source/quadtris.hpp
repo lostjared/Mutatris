@@ -18,6 +18,18 @@ namespace puzzle {
 		bool operator==(const int &c) const;
 	};
 
+	class GameGrid;
+
+	class Piece {
+	public:
+		Piece(GameGrid *grid);
+		void reset();
+		void shiftColors();
+	private:
+		Block blocks[3];
+		int x,y;
+		GameGrid *grid;
+	};
 
 	class GameGrid  {
 	public:
@@ -26,9 +38,13 @@ namespace puzzle {
 		void initGrid(int size_x, int size_y);
 		void releaseGrid();
 		Block *at(int x, int y);
+		int width() const;
+		int height() const;
+		int numBlocks() const { return 5; }
 	protected:
 		Block **blocks = nullptr;
 		int grid_w = 0, grid_h = 0;
+		Piece game_piece;
 	};
 
 	class PuzzleGame  {

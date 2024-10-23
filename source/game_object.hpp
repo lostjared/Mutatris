@@ -2,6 +2,7 @@
 #define __GAME_OBJECT__H_
 
 #include "SDL.h"
+#include<memory>
 
 namespace obj {
     class GameObject {
@@ -11,6 +12,11 @@ namespace obj {
         virtual void event(SDL_Event &e) = 0;
         virtual void load(SDL_Renderer *renderer) = 0;
     };
+
+    inline std::unique_ptr<obj::GameObject> object;
+    inline void setObject(obj::GameObject *o) {
+        object.reset(o);
+    }
 }
 
 #endif

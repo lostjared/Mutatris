@@ -50,8 +50,33 @@ namespace puzzle {
         return false;
     }
 
-    GameGrid::GameGrid()  : blocks{nullptr}, grid_w{0}, grid_h{0} {
+    Piece::Piece(GameGrid *g) : x{0}, y{0}, grid{g} {}
+	
+    void Piece::reset() {
+        x = grid->width()/2;
+        y = 0;
+        for(int i = 0; i < 3; ++i) {
+            blocks[i].x = grid->width()/2;
+            blocks[i].y = i;
+        }
+        do {
+            blocks[0].color = rand()%grid->numBlocks();
+            blocks[1].color = rand()%grid->numBlocks();
+            blocks[2].color = rand()%grid->numBlocks();
+        } while(blocks[0].color == blocks[1].color && blocks[0].color == blocks[2].color);
+    }
 
+    void Piece::shiftColors() {
+        Block b[3];
+        b[0] = blocks[0];
+        b[1] = blocks[1];
+        b[2] = blocks[2];
+        blocks[0] = b[2];
+        blocks[1] = b[0];
+        blocks[2] = b[1];
+    }
+
+    GameGrid::GameGrid()  : blocks{nullptr}, grid_w{0}, grid_h{0}, game_piece{this} {
     }
 
     GameGrid::~GameGrid() {
@@ -78,6 +103,7 @@ namespace puzzle {
         }
         grid_w = size_x;
         grid_h = size_y;
+        game_piece.reset();
     }
     
     Block *GameGrid::at(int x, int y) {
@@ -85,6 +111,14 @@ namespace puzzle {
             return &blocks[x][y];
         }
         return nullptr;
+    }
+
+    int GameGrid::width() const {
+        return grid_w;
+    }
+
+    int GameGrid::height() const {
+        return grid_h;
     }
 
     PuzzleGame::PuzzleGame() {

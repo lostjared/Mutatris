@@ -8,22 +8,12 @@
 #include"argz.hpp"
 #include"util.hpp"
 #include"intro.hpp"
+#include"game_object.hpp"
 #include<memory>
 
-void draw(SDL_Renderer *renderer, TTF_Font *fnt) {
-    util::printText(renderer, fnt, 25, 25, "Hello, World!", {255,255,255,255});
-}
-
-
-
-class Intro {
-    public:
-
-};
 
 int main(int argc, char **argv) {
     int width = 1280, height = 720;
-    
     const int TEX_WIDTH = 1280, TEX_HEIGHT = 720;
 
     Argz<std::string> argz(argc, argv);
@@ -93,29 +83,31 @@ int main(int argc, char **argv) {
     bool running = true;
     SDL_Event event;
 
-    std::unique_ptr<obj::GameObject> object(std::make_unique<obj::IntroObject>());
-    object->load(renderer);
+    obj::setObject(new obj::IntroObject());
+    obj::object->load(renderer);
     
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
                 running = false;
             }
-            object->event(event);
+            obj::object->event(event);
         }
 
         SDL_SetRenderTarget(renderer, main_texture);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        object->draw(renderer);
+        obj::object->draw(renderer);
         SDL_SetRenderTarget(renderer, nullptr);
         SDL_RenderCopy(renderer, main_texture, nullptr, nullptr);
         SDL_RenderPresent(renderer);
     }
 
+    obj::object.release();
     SDL_DestroyTexture(main_texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+  
     TTF_CloseFont(fnt);
     TTF_Quit();
     SDL_Quit();
