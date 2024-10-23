@@ -31,8 +31,18 @@ namespace obj {
                 int pos_y = 16 * z;
                 SDL_Rect rc = { pos_x, pos_y, 30, 14 };
                 puzzle::Block *b = game.grid[focus].at(i, z);
-                if(b != nullptr)
-                    SDL_RenderCopy(renderer, blocks[b->color], nullptr, &rc);
+                if(b != nullptr) {
+                    if(b->color >= 0)
+                        SDL_RenderCopy(renderer, blocks[b->color], nullptr, &rc);
+                    else {
+                        SDL_RenderCopy(renderer, blocks[1+(rand()%6)], nullptr, &rc);
+                        b->color --;
+                        if(b->color < -(60 * 4)) {
+                            b->color = 0;
+                        }
+                    }
+                    
+                }
             }
         }
 
@@ -59,6 +69,7 @@ namespace obj {
             }
         }
         SDL_SetRenderTarget(renderer, old_target);
+        game.procBlocks();
     }
 
 
@@ -94,6 +105,15 @@ namespace obj {
 
         util::printText(renderer, font, 25, 25, "Score: " + std::to_string(game.score), {255,255,255,255});
         util::printText(renderer, font, 25, 55, "Direction: " + std::to_string(cur_focus), {255, 255, 255, 255});
+        util::printText(renderer, font, 25, 85, "Timeout: " + std::to_string(game.timeout), {255, 255, 255, 255});
+        static Uint32 previous_time = SDL_GetTicks();
+        Uint32 current_time = SDL_GetTicks();
+        if (current_time - previous_time >= game.timeout) {
+            if(game.grid[cur_focus].canMoveDown()) {
+                game.grid[cur_focus].game_piece.moveDown();
+                previous_time = current_time;
+            }
+        }
     }
 
     void PuzzleObject::event(SDL_Renderer *renderer, SDL_Event &e)  {

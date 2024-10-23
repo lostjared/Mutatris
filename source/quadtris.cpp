@@ -53,7 +53,6 @@ namespace puzzle {
     Piece::Piece(GameGrid *g) : x{0}, y{0}, grid{g} {}
 	
     void Piece::reset() {
-        srand(static_cast<int>(time(0)));
         x = grid->width()/2;
         y = 0;
         for(int i = 0; i < 3; ++i) {
@@ -234,7 +233,23 @@ namespace puzzle {
         return grid_h;
     }
 
+    bool GameGrid::canMoveDown() {
+        if(game_piece.checkLocation(game_piece.getX(), game_piece.getY()) == false && game_piece.getY() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    
     PuzzleGame::PuzzleGame() {
+        newGame();
+    }
+
+    void PuzzleGame::newGame() {
+        srand(static_cast<int>(time(0)));
+        score = 0;
+        timeout = 1200;
+        clears = 0;
         grid[0].initGrid(12, (720/16/2)+1);
         grid[1].initGrid(12, 28);
         grid[2].initGrid(12, 720/16/2);
@@ -248,5 +263,132 @@ namespace puzzle {
         grid[3].game_piece.setCallback(callback);
     }
 
+    void PuzzleGame::procBlocks() {
+         for(int j = 0; j < 4; ++j) {
+            for(int i = 0; i < grid[j].width(); ++i) {
+                for(int z = 0; z < grid[j].height(); ++z) {
+                    Block *blocks[4];
+                    blocks[0] = grid[j].at(i, z);
+                    blocks[1] = grid[j].at(i, z+1);
+                    blocks[2] = grid[j].at(i, z+2);
+                    blocks[3] = grid[j].at(i, z+3);
+
+                    if(blocks[0] != nullptr && blocks[1] != nullptr && blocks[2] != nullptr) {
+                        if(blocks[0]->color > 0 && blocks[0]->color == blocks[1]->color && blocks[0]->color == blocks[2]->color) {
+                            if(blocks[3] != nullptr) {
+                                if(blocks[0]->color == blocks[3]->color) {
+                                    blocks[3]->color = -1;
+                                    score += 10;
+                                }
+                            }
+                            blocks[0]->color = -1;
+                            blocks[1]->color = -1;
+                            blocks[2]->color = -1;
+                            score += 1;
+                            clears ++;
+                            if((clears%4)==0) {
+                                timeout -= 25;
+                            }
+                            return;
+                        }
+                    }
+
+                    blocks[0] = grid[j].at(i, z);
+                    blocks[1] = grid[j].at(i+1, z);
+                    blocks[2] = grid[j].at(i+2, z);
+                    blocks[3] = grid[j].at(i+3, z);
+
+                    if(blocks[0] != nullptr && blocks[1] != nullptr && blocks[2] != nullptr) {
+                        if(blocks[0]->color > 0 && blocks[0]->color == blocks[1]->color && blocks[0]->color == blocks[2]->color) {
+                            if(blocks[3] != nullptr) {
+                                if(blocks[0]->color == blocks[3]->color) {
+                                    blocks[3]->color = -1;
+                                    score += 10;
+                                }
+                            }
+                            blocks[0]->color = -1;
+                            blocks[1]->color = -1;
+                            blocks[2]->color = -1;
+                            score += 1;
+                            clears ++;
+                            if((clears%4)==0) {
+                                timeout -= 25;
+                            }
+                            return;
+                        }
+                    }
+
+                    blocks[0] = grid[j].at(i, z);
+                    blocks[1] = grid[j].at(i+1, z+1);
+                    blocks[2] = grid[j].at(i+2, z+2);
+                    blocks[3] = grid[j].at(i+3, z+3);
+
+                    if (blocks[0] != nullptr && blocks[1] != nullptr && blocks[2] != nullptr) {
+                        if (blocks[0]->color > 0 && blocks[0]->color == blocks[1]->color && blocks[0]->color == blocks[2]->color) {
+                            if (blocks[3] != nullptr) {
+                                if (blocks[0]->color == blocks[3]->color) {
+                                    blocks[3]->color = -1;
+                                    score += 10;
+                                }
+                            }
+                            blocks[0]->color = -1;
+                            blocks[1]->color = -1;
+                            blocks[2]->color = -1;
+                            score += 1;
+                            clears ++;
+                            if((clears%4)==0) {
+                                timeout -= 25;
+                            }
+                            return;
+                        }
+                    }
+                
+                    blocks[0] = grid[j].at(i, z);
+                    blocks[1] = grid[j].at(i-1, z+1);
+                    blocks[2] = grid[j].at(i-2, z+2);
+                    blocks[3] = grid[j].at(i-3, z+3);
+
+                    if (blocks[0] != nullptr && blocks[1] != nullptr && blocks[2] != nullptr) {
+                        if (blocks[0]->color > 0 && blocks[0]->color == blocks[1]->color && blocks[0]->color == blocks[2]->color) {
+                            if (blocks[3] != nullptr) {
+                                if (blocks[0]->color == blocks[3]->color) {
+                                    blocks[3]->color = -1;
+                                    score += 10;
+                                }
+                            }
+                            blocks[0]->color = -1;
+                            blocks[1]->color = -1;
+                            blocks[2]->color = -1;
+                            score += 1;
+                            clears ++;
+                            if((clears%4)==0) {
+                                timeout -= 25;
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        moveDown_Blocks();
+    }
+	
+    void PuzzleGame::moveDown_Blocks() {
+        for(int j = 0; j < 4; ++j) {
+            for(int i = 0; i < grid[j].width(); ++i) {
+                for(int z = 0; z < grid[j].height(); ++z) {
+                    Block *b1 = grid[j].at(i, z);
+                    Block *b2 = grid[j].at(i, z+1);
+                    if(b1 != nullptr && b2 != nullptr) {
+                        if(b2->color == 0 && b1->color > 0) {
+                            std::swap(b1->color, b2->color);
+                            return;
+                        }
+                    }
+
+                }
+            }
+        }
+    }
 
 }

@@ -57,9 +57,11 @@ namespace puzzle {
 		int width() const;
 		int height() const;
 		int numBlocks() const { return block_number; }
+		bool canMoveDown();
 	protected:
 		Block **blocks = nullptr;
 		int grid_w = 0, grid_h = 0;
+		
 		
 	public:
 		Piece game_piece;
@@ -71,10 +73,13 @@ namespace puzzle {
 	public:
 		PuzzleGame();
 		void setCallback (Callback callback);
-
+		void newGame();
 		GameGrid grid[4];
 		int score = 0;
-		
+		int timeout = 1200;
+		int clears = 0;
+		void procBlocks();
+		void moveDown_Blocks();
 	};
 
 }
