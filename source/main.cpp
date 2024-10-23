@@ -36,16 +36,16 @@ int main(int argc, char **argv) {
                         width = std::stoi(resolution.substr(0, pos));
                         height = std::stoi(resolution.substr(pos+1));
                         if(width == 0 || height == 0) {
-                            std::cerr << "Invalid resolution.\n";
+                            std::cerr << "Mutatris: Invalid resolution.\n";
                         }
-                        std::cout << "Setting resolution: " << width << "x" << height << "\n";
+                        std::cout << "Mutatris: Setting resolution: " << width << "x" << height << "\n";
                     }
                 }
                     break;
            }
         }
     } catch(const ArgException<std::string> &e) {
-        std::cerr << "Syntax Error: " << e.text() << "\n";
+        std::cerr << "Mutatris: Syntax Error: " << e.text() << "\n";
     }
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -53,14 +53,14 @@ int main(int argc, char **argv) {
     }
 
     if(TTF_Init() < 0) {
-        std::cerr << "Error could not initalize SDL_ttf...\n";
+        std::cerr << "Mutatris: Error could not initalize SDL_ttf...\n";
         std::cerr.flush();
         return EXIT_FAILURE;
     }
 
     TTF_Font *fnt = TTF_OpenFont(util::getFilePath("font.ttf").c_str(), 18);
     if(!fnt) {
-        std::cerr << "Error initalizing font..\n";
+        std::cerr << "Mutatris: Error initalizing font..\n";
         std::cerr.flush();
         TTF_Quit();
         SDL_Quit();
@@ -91,9 +91,8 @@ int main(int argc, char **argv) {
             if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
                 running = false;
             }
-            obj::object->event(event);
+            obj::object->event(renderer, event);
         }
-
         SDL_SetRenderTarget(renderer, main_texture);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);

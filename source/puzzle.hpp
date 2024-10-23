@@ -13,7 +13,7 @@ namespace obj {
         PuzzleObject() = default;
         virtual ~PuzzleObject();
         virtual void draw(SDL_Renderer *renderer) override;
-        virtual void event(SDL_Event &e) override;
+        virtual void event(SDL_Renderer *renderer, SDL_Event &e) override;
         virtual void load(SDL_Renderer *renderer) override;
     protected:
         puzzle::PuzzleGame game;

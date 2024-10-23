@@ -18,12 +18,12 @@ namespace util {
     void printText(SDL_Renderer *renderer,TTF_Font *font,int x, int y, const std::string &text, SDL_Color col) {
         SDL_Surface *surf = TTF_RenderText_Blended(font,text.c_str(), col);
         if(!surf) {
-            std::cerr << "Error rendering text...\n";
+            std::cerr << "Mutatris: Error rendering text...\n";
             return;
         }
         SDL_Texture *tex = SDL_CreateTextureFromSurface(renderer, surf);
         if(!tex) {
-            std::cerr << "Error creating texture..\n";
+            std::cerr << "Mutatris: Error creating texture..\n";
             SDL_FreeSurface(surf);
             return;
         }
@@ -41,7 +41,7 @@ namespace util {
     SDL_Texture *loadTexture(SDL_Renderer *renderer, const std::string &filename, int &w, int &h, bool color, SDL_Color key) {
         SDL_Surface *surface = png::LoadPNG(getFilePath(filename).c_str());
         if(!surface) {
-            std::cerr << "Error could not open file: " << getFilePath(filename) << "\n";
+            std::cerr << "Mutatris: Error could not open file: " << getFilePath(filename) << "\n";
             std::cerr.flush();
             exit(EXIT_FAILURE);
         }
@@ -53,12 +53,22 @@ namespace util {
 
         SDL_Texture *tex = SDL_CreateTextureFromSurface(renderer, surface);
         if(!tex) {
-            std::cerr << "Error creating texture from surface..\n";
+            std::cerr << "Mutatris: Error creating texture from surface..\n";
             std::cerr.flush();
             exit(EXIT_FAILURE);
         }
         SDL_FreeSurface(surface);
         return tex;
+    }
+
+    TTF_Font *loadFont(const std::string &filename, int size) {
+        TTF_Font *fnt = TTF_OpenFont(getFilePath(filename).c_str(), size);
+        if(!fnt) {
+            std::cerr << "Mutatris: Error Opening Font: " << filename << "\n";
+            std::cerr.flush();
+            exit(EXIT_FAILURE);
+        }
+        return fnt;
     }
 
 }
