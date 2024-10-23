@@ -1,14 +1,64 @@
 #include<iostream>
 #include<string>
+#include<cstdlib>
+#include<sstream>
 #include"SDL.h"
 #include"SDL_ttf.h"
-#include<cstdlib>
 #include"quadtris.hpp"
+#include"argz.hpp"
 
+#ifdef FOR_WASM
+std::string path = "/assets";
+#else
+std::string path = "assets";
+#endif
+
+std::string getFilePath(const std::string &filename) {
+    std::ostringstream stream;
+    stream << path << "/" << filename;
+    return stream.str();
+}
 
 int main(int argc, char **argv) {
-    const int width = 1280, height = 720;
+    int width = 1280, height = 720;
+    
     const int TEX_WIDTH = 1280, TEX_HEIGHT = 720;
+
+    Argz<std::string> argz(argc, argv);
+    argz.addOptionSingleValue('p', "path")
+    .addOptionSingleValue('r', "Resolution");
+
+    int value = 0;
+    Argument<std::string> arg;
+    
+    try {
+        while((value = argz.proc(arg)) != -1) {
+            switch(value) {
+                case 'p':
+                    path = arg.arg_value;
+                    break;
+                case 'r': {
+                    std::string resolution = arg.arg_value;
+                    auto pos = resolution.find("x");
+                    if(pos != std::string::npos) {
+                        width = std::stoi(resolution.substr(0, pos));
+                        height = std::stoi(resolution.substr(pos+1));
+                        if(width == 0 || height == 0) {
+                            std::cerr << "Invalid resolution.\n";
+                        }
+                        std::cout << "Setting resolution: " << width << "x" << height << "\n";
+                    }
+                }
+                    break;
+            }
+        }
+    } catch(const ArgException<std::string> &e) {
+        std::cerr << "Syntax Error: " << e.text() << "\n";
+    }
+
+
+
+
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         return EXIT_FAILURE;
     }
