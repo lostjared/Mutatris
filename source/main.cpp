@@ -101,8 +101,9 @@ int main(int argc, char **argv) {
         SDL_RenderCopy(renderer, main_texture, nullptr, nullptr);
         SDL_RenderPresent(renderer);
     }
+ 
+    obj::object.reset();
 
-    obj::object.release();
     SDL_DestroyTexture(main_texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

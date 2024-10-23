@@ -20,7 +20,7 @@ namespace obj {
 
     void IntroObject::load(SDL_Renderer *renderer) {
         logo = util::loadTexture(renderer, "intro.png");
-        font = util::loadFont("font.ttf", 36);
+        font = util::loadFont("font.ttf", 54);
         std::cout << "Mutatris: Intro Init...\n";
     }
 
@@ -29,6 +29,8 @@ namespace obj {
         if(logo != nullptr) {
             SDL_DestroyTexture(logo);
         }
+        if(font != nullptr)
+            TTF_CloseFont(font);
     }
 
 }

@@ -5,6 +5,7 @@
 #include"SDL.h"
 #include"SDL_ttf.h"
 #include"quadtris.hpp"
+#include<vector>
 
 namespace obj {
 
@@ -17,6 +18,7 @@ namespace obj {
         virtual void load(SDL_Renderer *renderer) override;
     protected:
         puzzle::PuzzleGame game;
+        std::vector<SDL_Texture *> blocks;
     };
 
 }

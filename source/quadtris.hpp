@@ -40,11 +40,12 @@ namespace puzzle {
 		Block *at(int x, int y);
 		int width() const;
 		int height() const;
-		int numBlocks() const { return 5; }
+		int numBlocks() const { return block_number; }
 	protected:
 		Block **blocks = nullptr;
 		int grid_w = 0, grid_h = 0;
 		Piece game_piece;
+		static const int block_number = 8;
 	};
 
 	class PuzzleGame  {

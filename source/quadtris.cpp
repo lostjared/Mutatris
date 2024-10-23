@@ -85,6 +85,7 @@ namespace puzzle {
     
     void GameGrid::releaseGrid() {
         if(blocks != nullptr) {
+            std::cout << "Mutatris: Releasing Grid...\n";
             for(int i = 0; i < grid_w; ++i) {
                 delete [] blocks[i];
             }
@@ -122,9 +123,10 @@ namespace puzzle {
     }
 
     PuzzleGame::PuzzleGame() {
-
-
-
+        grid[0].initGrid(8, 17);
+        grid[1].initGrid(8, 17);
+        grid[2].initGrid(8, 17);
+        grid[3].initGrid(8, 17);
     }
 
 
