@@ -123,10 +123,10 @@ namespace puzzle {
     }
 
     PuzzleGame::PuzzleGame() {
-        grid[0].initGrid(8, 17);
-        grid[1].initGrid(8, 17);
-        grid[2].initGrid(8, 17);
-        grid[3].initGrid(8, 17);
+        grid[0].initGrid(12, (720/16/2)+1);
+        grid[1].initGrid(12, 720/16/2);
+        grid[2].initGrid(12, 28);
+        grid[3].initGrid(12, 29);
     }
 
 

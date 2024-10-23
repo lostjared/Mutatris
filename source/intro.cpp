@@ -26,9 +26,8 @@ namespace obj {
 
     IntroObject::~IntroObject() {
         std::cout << "Mutatris: Released Intro Object...\n";
-        if(logo != nullptr) {
+        if(logo != nullptr) 
             SDL_DestroyTexture(logo);
-        }
         if(font != nullptr)
             TTF_CloseFont(font);
     }

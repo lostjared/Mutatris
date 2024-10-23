@@ -19,6 +19,8 @@ namespace obj {
     protected:
         puzzle::PuzzleGame game;
         std::vector<SDL_Texture *> blocks;
+        std::vector<SDL_Texture *> backgrounds;
+        int cur_level = 0;
     };
 
 }

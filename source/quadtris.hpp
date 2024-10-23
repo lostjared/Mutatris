@@ -51,8 +51,6 @@ namespace puzzle {
 	class PuzzleGame  {
 	public:
 		PuzzleGame();
-
-	protected:
 		GameGrid grid[4];
 	};
 
