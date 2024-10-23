@@ -6,17 +6,11 @@
 #include"SDL_ttf.h"
 #include"quadtris.hpp"
 #include"argz.hpp"
+#include"util.hpp"
 
-#ifdef FOR_WASM
-std::string path = "/assets";
-#else
-std::string path = "assets";
-#endif
 
-std::string getFilePath(const std::string &filename) {
-    std::ostringstream stream;
-    stream << path << "/" << filename;
-    return stream.str();
+void draw(SDL_Renderer *renderer, TTF_Font *fnt) {
+    util::printText(renderer, fnt, 25, 25, "Hello, World!", {255,255,255,255});
 }
 
 int main(int argc, char **argv) {
@@ -35,7 +29,7 @@ int main(int argc, char **argv) {
         while((value = argz.proc(arg)) != -1) {
             switch(value) {
                 case 'p':
-                    path = arg.arg_value;
+                    util::path = arg.arg_value;
                     break;
                 case 'r': {
                     std::string resolution = arg.arg_value;
@@ -50,14 +44,11 @@ int main(int argc, char **argv) {
                     }
                 }
                     break;
-            }
+           }
         }
     } catch(const ArgException<std::string> &e) {
         std::cerr << "Syntax Error: " << e.text() << "\n";
     }
-
-
-
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         return EXIT_FAILURE;
@@ -66,6 +57,15 @@ int main(int argc, char **argv) {
     if(TTF_Init() < 0) {
         std::cerr << "Error could not initalize SDL_ttf...\n";
         std::cerr.flush();
+        return EXIT_FAILURE;
+    }
+
+    TTF_Font *fnt = TTF_OpenFont(util::getFilePath("font.ttf").c_str(), 18);
+    if(!fnt) {
+        std::cerr << "Error initalizing font..\n";
+        std::cerr.flush();
+        TTF_Quit();
+        SDL_Quit();
         return EXIT_FAILURE;
     }
 
@@ -96,6 +96,7 @@ int main(int argc, char **argv) {
         SDL_SetRenderTarget(renderer, main_texture);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+        draw(renderer, fnt);
         SDL_SetRenderTarget(renderer, nullptr);
         SDL_RenderCopy(renderer, main_texture, nullptr, nullptr);
         SDL_RenderPresent(renderer);
@@ -104,6 +105,7 @@ int main(int argc, char **argv) {
     SDL_DestroyTexture(main_texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    TTF_CloseFont(fnt);
     TTF_Quit();
     SDL_Quit();
 
