@@ -7,11 +7,19 @@
 #include"quadtris.hpp"
 #include"argz.hpp"
 #include"util.hpp"
-
+#include"intro.hpp"
+#include<memory>
 
 void draw(SDL_Renderer *renderer, TTF_Font *fnt) {
     util::printText(renderer, fnt, 25, 25, "Hello, World!", {255,255,255,255});
 }
+
+
+
+class Intro {
+    public:
+
+};
 
 int main(int argc, char **argv) {
     int width = 1280, height = 720;
@@ -84,19 +92,22 @@ int main(int argc, char **argv) {
     SDL_Texture *main_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, TEX_WIDTH, TEX_HEIGHT);
     bool running = true;
     SDL_Event event;
-    
 
+    std::unique_ptr<obj::GameObject> object(std::make_unique<obj::IntroObject>());
+    object->load(renderer);
+    
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
                 running = false;
             }
+            object->event(event);
         }
 
         SDL_SetRenderTarget(renderer, main_texture);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        draw(renderer, fnt);
+        object->draw(renderer);
         SDL_SetRenderTarget(renderer, nullptr);
         SDL_RenderCopy(renderer, main_texture, nullptr, nullptr);
         SDL_RenderPresent(renderer);
