@@ -2,6 +2,7 @@
 #define PUZZLE_BLOCK_H
 #include <array>
 #include <vector>
+#include<functional>
 
 namespace puzzle {
 
@@ -20,15 +21,30 @@ namespace puzzle {
 
 	class GameGrid;
 
+	using Callback = std::function<void ()>;
+
 	class Piece {
 	public:
 		Piece(GameGrid *grid);
+		void setCallback(Callback switch_);
 		void reset();
 		void shiftColors();
+		int getX() const { return x; }
+		int getY() const { return y; }
+		int getDirection() const { return direction; }
+		Block *at(int index);
+		void moveLeft();
+		void moveRight();
+		void moveDown();
+		bool checkLocation(int x, int y);
+		void shiftDirection();
+		void setBlock();
 	private:
 		Block blocks[3];
-		int x,y;
+		int x = 0,y = 0;
+		int direction = 0;
 		GameGrid *grid;
+		Callback switch_grid = nullptr;
 	};
 
 	class GameGrid  {
@@ -44,7 +60,10 @@ namespace puzzle {
 	protected:
 		Block **blocks = nullptr;
 		int grid_w = 0, grid_h = 0;
+		
+	public:
 		Piece game_piece;
+	private:
 		static const int block_number = 8;
 	};
 
@@ -52,6 +71,7 @@ namespace puzzle {
 	public:
 		PuzzleGame();
 		GameGrid grid[4];
+		void setCallback (Callback callback);
 	};
 
 }

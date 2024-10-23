@@ -53,6 +53,7 @@ namespace puzzle {
     Piece::Piece(GameGrid *g) : x{0}, y{0}, grid{g} {}
 	
     void Piece::reset() {
+        srand(static_cast<int>(time(0)));
         x = grid->width()/2;
         y = 0;
         for(int i = 0; i < 3; ++i) {
@@ -60,9 +61,9 @@ namespace puzzle {
             blocks[i].y = i;
         }
         do {
-            blocks[0].color = rand()%grid->numBlocks();
-            blocks[1].color = rand()%grid->numBlocks();
-            blocks[2].color = rand()%grid->numBlocks();
+            blocks[0].color = 1+(rand()%(grid->numBlocks()-1));
+            blocks[1].color = 1+(rand()%(grid->numBlocks()-1));
+            blocks[2].color = 1+(rand()%(grid->numBlocks()-1));
         } while(blocks[0].color == blocks[1].color && blocks[0].color == blocks[2].color);
     }
 
@@ -74,6 +75,116 @@ namespace puzzle {
         blocks[0] = b[2];
         blocks[1] = b[0];
         blocks[2] = b[1];
+    }
+
+    Block *Piece::at(int index) {
+        if(index >= 0 && index <= 2)
+            return &blocks[index];
+        return nullptr;
+    }
+
+    void Piece::moveLeft() {
+
+        if(checkLocation(x-1,y)) {
+            if(x > 0) {
+                x --;
+            }
+        }
+    }
+
+		
+    void Piece::moveRight() {
+        if(checkLocation(x+1, y)) {
+            if(x < grid->width()-1) {
+                x ++;
+            }
+        }
+    }
+
+		
+    void Piece::moveDown() {
+        if(checkLocation(x, y+1)) {
+            if(y < grid->height()-3) {
+                y++;
+            } else {
+                setBlock();
+            }
+        } else {
+            setBlock();
+        }
+    }
+
+    void Piece::setCallback(Callback switch_) {
+        switch_grid = switch_;
+    }
+
+    void Piece::setBlock() {
+        Block *b[3];
+
+        switch(direction) {
+            case 0:
+                b[0] = grid->at(x, y);
+                b[1] = grid->at(x, y+1);
+                b[2] = grid->at(x, y+2);
+                break;
+            case 1:
+                b[0] = grid->at(x, y);
+                b[1] = grid->at(x+1, y);
+                b[2] = grid->at(x+2, y);
+                break;
+            case 2:
+                b[0] = grid->at(x, y);
+                b[1] = grid->at(x-1, y);
+                b[2] = grid->at(x-2, y);
+                break;
+        }
+
+        if(b[0] != nullptr &&  b[1] != nullptr && b[2] != nullptr) {
+            b[0]->color = blocks[0].color;
+            b[1]->color = blocks[1].color;
+            b[2]->color = blocks[2].color;
+            reset();
+            switch_grid();
+        }
+    }
+
+    bool Piece::checkLocation(int x, int y) {
+
+        Block *b[3];
+        switch(direction) {
+            case 0:
+                b[0] = grid->at(x, y);
+                b[1] = grid->at(x, y+1);
+                b[2] = grid->at(x, y+2);
+                break;
+            case 1:
+                b[0] = grid->at(x, y);
+                b[1] = grid->at(x+1, y);
+                b[2] = grid->at(x+2, y);
+                break;
+            case 2:
+                b[0] = grid->at(x, y);
+                b[1] = grid->at(x-1, y);
+                b[2] = grid->at(x-2, y);
+                break;
+        }
+
+        if(b[0] != nullptr && b[1] != nullptr && b[2] != nullptr) {
+            if(b[0]->color == 0 && b[1]->color == 0 && b[2]->color == 0)
+                return true;
+        }
+        return false;
+    }
+
+    void Piece::shiftDirection() {
+        int old_dir = direction;
+        direction ++;
+        if(direction > 2)
+            direction = 0;
+
+        if(!checkLocation(x, y)) {
+            direction = old_dir;
+        }
     }
 
     GameGrid::GameGrid()  : blocks{nullptr}, grid_w{0}, grid_h{0}, game_piece{this} {
@@ -124,9 +235,16 @@ namespace puzzle {
 
     PuzzleGame::PuzzleGame() {
         grid[0].initGrid(12, (720/16/2)+1);
-        grid[1].initGrid(12, 720/16/2);
-        grid[2].initGrid(12, 28);
-        grid[3].initGrid(12, 29);
+        grid[1].initGrid(12, 29);
+        grid[2].initGrid(12, 720/16/2);
+        grid[3].initGrid(12, 28);
+    }
+
+    void PuzzleGame::setCallback (Callback callback) {
+        grid[0].game_piece.setCallback(callback);
+        grid[1].game_piece.setCallback(callback);
+        grid[2].game_piece.setCallback(callback);
+        grid[3].game_piece.setCallback(callback);
     }
 
 
