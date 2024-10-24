@@ -10,7 +10,31 @@
 #include"intro.hpp"
 #include"game_object.hpp"
 #include<memory>
+#ifdef FOR_WASM
+#include<emscripten/emscripten.h>
+#endif
 
+SDL_Texture *main_texture;
+bool running = true;
+SDL_Event event;
+SDL_Renderer *renderer;
+
+void eventProc() {
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
+            running = false;
+        }
+        obj::object->event(renderer, event);
+    }
+    SDL_SetRenderTarget(renderer, main_texture);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    obj::object->draw(renderer);
+    SDL_SetRenderTarget(renderer, nullptr);
+    SDL_RenderCopy(renderer, main_texture, nullptr, nullptr);
+    SDL_RenderPresent(renderer);
+
+}
 
 int main(int argc, char **argv) {
     int width = 1280, height = 720;
@@ -73,34 +97,25 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) {
         SDL_DestroyWindow(window);
         SDL_Quit();
         return EXIT_FAILURE;
     }
-    SDL_Texture *main_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, TEX_WIDTH, TEX_HEIGHT);
-    bool running = true;
-    SDL_Event event;
-
+    main_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, TEX_WIDTH, TEX_HEIGHT);
+    running = true;
+    
     obj::setObject(new obj::IntroObject());
     obj::object->load(renderer);
-    
+
+#ifdef FOR_WASM
+    emscripten_set_main_loop(eventProc, 0, 1);
+#else    
     while (running) {
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
-                running = false;
-            }
-            obj::object->event(renderer, event);
-        }
-        SDL_SetRenderTarget(renderer, main_texture);
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-        obj::object->draw(renderer);
-        SDL_SetRenderTarget(renderer, nullptr);
-        SDL_RenderCopy(renderer, main_texture, nullptr, nullptr);
-        SDL_RenderPresent(renderer);
+        eventProc(); 
     }
+#endif
  
     obj::object.reset();
 
