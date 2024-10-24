@@ -1,6 +1,8 @@
 #include "puzzle.hpp"
 #include<iostream>
 #include<string>
+#include<random>
+#include<algorithm>
 #include"util.hpp"
 #include"game_over.hpp"
 
@@ -25,7 +27,7 @@ namespace obj {
     void PuzzleObject::drawGrid(SDL_Renderer *renderer, SDL_Texture *texture, int focus) {
         SDL_Texture* old_target = SDL_GetRenderTarget(renderer);
         SDL_SetRenderTarget(renderer, texture);
-        SDL_RenderCopy(renderer, backgrounds[0], nullptr, nullptr);
+        SDL_RenderCopy(renderer, backgrounds[game.level < backgrounds.size() ? game.level : backgrounds.size()-1], nullptr, nullptr);
         for (int i = 0; i < game.grid[focus].width(); ++i) {
             for (int z = 0; z < game.grid[focus].height(); ++z) {
                 int pos_x = 32 * i;
@@ -75,7 +77,7 @@ namespace obj {
 
 
     void PuzzleObject::draw(SDL_Renderer *renderer) {
-        SDL_RenderCopy(renderer, backgrounds[cur_level], nullptr, nullptr);
+        SDL_RenderCopy(renderer, backgrounds[game.level < backgrounds.size() ? game.level : backgrounds.size()-1], nullptr, nullptr);
         drawGrid(renderer, game_textures[0], 0);
         int width = 0, height = 0;
         SDL_QueryTexture(game_textures[0], nullptr, nullptr, &width, &height);
@@ -106,7 +108,8 @@ namespace obj {
 
         util::printText(renderer, font, 25, 25, "Score: " + std::to_string(game.score), {255,255,255,255});
         util::printText(renderer, font, 25, 55, "Direction: " + std::to_string(cur_focus), {255, 255, 255, 255});
-        util::printText(renderer, font, 25, 85, "Timeout: " + std::to_string(game.timeout), {255, 255, 255, 255});
+        util::printText(renderer, font, 25, 85, "Level: " + std::to_string(game.level+1) + " Timeout: " + std::to_string(game.timeout), {255, 255, 255, 255});
+        
         static Uint32 previous_time = SDL_GetTicks();
         Uint32 current_time = SDL_GetTicks();
         if (current_time - previous_time >= game.timeout) {
@@ -226,10 +229,13 @@ namespace obj {
         for(int i = 0; filenames[i] != 0; ++i) {
             blocks.push_back(util::loadTexture(renderer, filenames[i]));
         }
-        static const char *bg_filenames[] = {"blocks.png", 0};
+        static const char *bg_filenames[] = {"blocks.png","blocks1.png","blocks2.png","blocks3.png", "blocks4.png", 0};
         for(int i = 0; bg_filenames[i] != 0; ++i) {
             backgrounds.push_back(util::loadTexture(renderer, bg_filenames[i]));
         }
+        std::random_device rd;
+        std::mt19937 rng(rd()); 
+        std::shuffle(backgrounds.begin(), backgrounds.end(), rng);
         game.setCallback([&]() -> void {
             cur_focus++;
             if(cur_focus > 3)

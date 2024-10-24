@@ -79,6 +79,7 @@ namespace puzzle {
 		int score = 0;
 		int timeout = 1200;
 		int clears = 0;
+		int level =  0;
 		void procBlocks();
 		void moveDown_Blocks();
 	};
