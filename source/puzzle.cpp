@@ -2,6 +2,7 @@
 #include<iostream>
 #include<string>
 #include"util.hpp"
+#include"game_over.hpp"
 
 namespace obj {
 
@@ -112,11 +113,20 @@ namespace obj {
             if(game.grid[cur_focus].canMoveDown()) {
                 game.grid[cur_focus].game_piece.moveDown();
                 previous_time = current_time;
+            } else {
+                obj::setObject(new obj::GameOverObject(game.score, game.clears));
+                obj::object->load(renderer);
             }
         }
     }
 
     void PuzzleObject::event(SDL_Renderer *renderer, SDL_Event &e)  {
+
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_s) {
+            game.grid[cur_focus].game_piece.drop();
+            return;
+        }
+
         switch(e.type) {
             case SDL_KEYDOWN: {
                 if(cur_focus == 0) {

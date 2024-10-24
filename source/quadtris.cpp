@@ -114,6 +114,15 @@ namespace puzzle {
         }
     }
 
+    void Piece::drop() {
+        for(int y = getY(); y < grid->height(); ++y) {
+            if(checkLocation(getX(), y)) {
+                setBlock();
+                return;
+            }
+        }
+    }
+
     void Piece::setCallback(Callback switch_) {
         switch_grid = switch_;
     }
