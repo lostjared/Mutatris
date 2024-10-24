@@ -17,6 +17,7 @@ namespace obj {
     protected:
         SDL_Texture *logo = nullptr;
         TTF_Font *font = nullptr;
+        TTF_Font *large_font = nullptr;
     };
 }
 

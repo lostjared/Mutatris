@@ -11,7 +11,8 @@ namespace obj {
     }
 
     GameOverObject::~GameOverObject() {
-
+        SDL_DestroyTexture(bg);
+        TTF_CloseFont(font);
     }
         
     void GameOverObject::draw(SDL_Renderer *renderer) {
