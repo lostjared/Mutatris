@@ -286,7 +286,7 @@ namespace puzzle {
             level = 4;
         }
 
-         for(int j = 0; j < 4; ++j) {
+        for(int j = 0; j < 4; ++j) {
             for(int i = 0; i < grid[j].width(); ++i) {
                 for(int z = 0; z < grid[j].height(); ++z) {
                     Block *blocks[4];
@@ -389,6 +389,109 @@ namespace puzzle {
                             return;
                         }
                     }
+                }
+            }
+        }
+
+        for(int i = 0; i < grid[0].width(); i++) {
+            puzzle::Block *b[4];
+            b[0] = grid[0].at(i, grid[0].height()-1);
+            b[1] = grid[0].at(i, grid[0].height()-2);
+            b[2] = grid[2].at(i, grid[2].height()-1);
+            b[3] = grid[2].at(i, grid[2].height()-2);
+
+            if(b[0] && b[1] && b[2]) {
+                if(b[0]->color > 0 && b[0]->color == b[1]->color && b[0]->color == b[2]->color) {
+                    if(b[0]->color > 0 && b[3] && b[0]->color == b[3]->color) {
+                        score += 10;
+                        b[3]->color = -1;
+                    }
+
+                    score++;
+                    clears++;
+                    if((clears%4)==0) {
+                        timeout -= 25;
+                    }
+                    b[0]->color = -1;
+                    b[1]->color = -1;
+                    b[2]->color = -1;
+                    return;
+                }
+            }
+            if(b[2] && b[3] && b[0]) {
+                if(b[2]->color > 0 && b[2]->color == b[0]->color && b[2]->color == b[3]->color) {
+                    if(b[1] && b[2]->color == b[1]->color) {
+                        score += 10;
+                        b[1]->color = -1;
+                    }
+
+                    score ++;
+                    clears++;
+                    if((clears%4)==0) {
+                        timeout -= 25;
+                    }
+                    b[2]->color = -1;
+                    b[3]->color = -1;
+                    b[0]->color = -1;
+                }
+            }
+        }
+      
+        for(int i = 0; i < grid[0].width() - 3; ++i) {
+            puzzle::Block *b[4];
+            int y0 = grid[0].height() - 1; 
+            int y1 = grid[2].height() - 1; 
+
+            b[0] = grid[0].at(i, y0);
+            b[1] = grid[2].at(i + 1, y1);
+            b[2] = grid[2].at(i + 2, y1 - 1);
+            b[3] = grid[2].at(i + 3, y1 - 2);
+
+            if(b[0] && b[1] && b[2]) {
+                if(b[0]->color > 0 && b[0]->color == b[1]->color && b[0]->color == b[2]->color) {
+                    if(b[3] && b[0]->color == b[3]->color) {
+                        score += 10;
+                        b[3]->color = -1;
+                    }
+
+                    score++;
+                    clears++;
+                    if((clears % 4) == 0) {
+                        timeout -= 25;
+                    }
+                    b[0]->color = -1;
+                    b[1]->color = -1;
+                    b[2]->color = -1;
+                    return;
+                }
+            }
+        }
+
+        for(int i = 3; i < grid[0].width(); ++i) {
+            puzzle::Block *b[4];
+            int y0 = grid[0].height() - 1; 
+            int y1 = grid[2].height() - 1; 
+
+            b[0] = grid[0].at(i, y0);
+            b[1] = grid[2].at(i - 1, y1);
+            b[2] = grid[2].at(i - 2, y1 - 1);
+            b[3] = grid[2].at(i - 3, y1 - 2);
+
+            if(b[0] && b[1] && b[2]) {
+                if(b[0]->color > 0 && b[0]->color == b[1]->color && b[0]->color == b[2]->color) {
+                    if(b[3] && b[0]->color == b[3]->color) {
+                        score += 10;
+                        b[3]->color = -1;
+                    }
+                    score++;
+                    clears++;
+                    if((clears % 4) == 0) {
+                        timeout -= 25;
+                    }
+                    b[0]->color = -1;
+                    b[1]->color = -1;
+                    b[2]->color = -1;
+                    return;
                 }
             }
         }

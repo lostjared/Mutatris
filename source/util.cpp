@@ -71,4 +71,8 @@ namespace util {
         return fnt;
     }
 
+    SDL_Surface *loadSurface(const std::string &name) {
+        return png::LoadPNG(getFilePath(name).c_str());
+    }
+
 }

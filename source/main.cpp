@@ -103,6 +103,11 @@ int main(int argc, char **argv) {
         SDL_Quit();
         return EXIT_FAILURE;
     }
+
+    SDL_Surface *icon = util::loadSurface("block_red.png");
+
+    SDL_SetWindowIcon(window, icon);
+
     main_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, TEX_WIDTH, TEX_HEIGHT);
     running = true;
     
@@ -122,7 +127,7 @@ int main(int argc, char **argv) {
     SDL_DestroyTexture(main_texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-  
+    SDL_FreeSurface(icon);
     TTF_CloseFont(fnt);
     TTF_Quit();
     SDL_Quit();
