@@ -38,7 +38,7 @@ namespace obj {
                     else {
                         SDL_RenderCopy(renderer, blocks[1+(rand()%6)], nullptr, &rc);
                         b->color --;
-                        if(b->color < -(60 * 4)) {
+                        if(b->color < -(60 * 2)) {
                             b->color = 0;
                         }
                     }
