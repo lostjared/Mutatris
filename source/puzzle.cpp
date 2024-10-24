@@ -38,15 +38,28 @@ namespace obj {
                     if(b->color >= 0)
                         SDL_RenderCopy(renderer, blocks[b->color], nullptr, &rc);
                     else {
-                        SDL_RenderCopy(renderer, blocks[1+(rand()%6)], nullptr, &rc);
-                        b->color --;
-                        if(b->color < -(60 * 2)) {
-                            b->color = 0;
-                        }
+                        SDL_RenderCopy(renderer, blocks[1+(rand()%6)], nullptr, &rc);      
                     }
                     
                 }
             }
+        }
+
+        static Uint32 previous_time = SDL_GetTicks();
+        Uint32 current_time = SDL_GetTicks();
+        if (current_time - previous_time >= 25) {        
+            for(int i = 0; i < game.grid[focus].width(); ++i) {
+                for(int z = 0; z < game.grid[focus].height(); ++z) {
+                    puzzle::Block *b = game.grid[focus].at(i, z);
+                    if(b && b->color < 0) {
+                        b->color --;
+                        if(b->color < -30) {
+                            b->color = 0;
+                        }
+                    }
+                }
+            }
+            previous_time = current_time;
         }
 
         if(cur_focus == focus) {
