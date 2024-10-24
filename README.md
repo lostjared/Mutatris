@@ -4,6 +4,8 @@
 
 ![image](https://github.com/user-attachments/assets/ff3d6bb1-7b48-4f4b-be27-43082d551ce8)
 
+![image](https://github.com/user-attachments/assets/d0e9c8fc-5feb-498d-a1d6-afed076c09d1)
+
 
 Welcome to **Mutatris**, a fast-paced puzzle game where you control blocks on a grid and aim to clear rows and columns by aligning blocks of the same color. The more you clear, the higher your score—can you keep up as the game speeds up?
 
