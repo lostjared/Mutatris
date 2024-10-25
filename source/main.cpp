@@ -1,3 +1,4 @@
+
 #include<iostream>
 #include<string>
 #include<cstdlib>
@@ -13,6 +14,7 @@
 #ifdef FOR_WASM
 #include<emscripten/emscripten.h>
 #endif
+#include"version_info.hpp"
 
 SDL_Texture *main_texture;
 bool running = true;
@@ -43,15 +45,24 @@ int main(int argc, char **argv) {
     Argz<std::string> argz(argc, argv);
     argz.addOptionSingleValue('p', "path")
     .addOptionSingleValue('r', "Resolution")
+    .addOptionSingle('f', "fullscreen mode")
     .addOptionDoubleValue('P', "path", "path to assets")
-    .addOptionDoubleValue('R', "resolution", "window resolution");
+    .addOptionDoubleValue('R', "resolution", "window resolution")
+    .addOptionDouble('F', "fullscreen", "Full screen mode");
+
 
     int value = 0;
     Argument<std::string> arg;
-    
+    bool full = false;
+    std::cout << "Mutatris v" << version_info << ": written by Jared Bruni\n";
+
     try {
         while((value = argz.proc(arg)) != -1) {
             switch(value) {
+                case 'f':
+                case 'F':
+                full = true;
+                break;
                 case 'p':
                 case 'P':
                     util::path = arg.arg_value;
@@ -96,7 +107,7 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    SDL_Window* window = SDL_CreateWindow("Mutatris", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow("Mutatris", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, full == true ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_SHOWN);
     if (!window) {
         SDL_Quit();
         return EXIT_FAILURE;
