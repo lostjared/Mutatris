@@ -77,7 +77,7 @@ namespace puzzle {
 		void newGame();
 		GameGrid grid[4];
 		int score = 0;
-		int timeout = 1200;
+		unsigned int timeout = 1200;
 		int clears = 0;
 		int level =  0;
 		void procBlocks();

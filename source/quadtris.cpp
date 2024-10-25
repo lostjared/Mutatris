@@ -128,7 +128,7 @@ namespace puzzle {
     }
 
     void Piece::setBlock() {
-        Block *b[3];
+        Block *b[3] = {nullptr};
 
         switch(direction) {
             case 0:
@@ -159,7 +159,7 @@ namespace puzzle {
 
     bool Piece::checkLocation(int x, int y) {
 
-        Block *b[3];
+        Block *b[3] = {nullptr};
         switch(direction) {
             case 0:
                 b[0] = grid->at(x, y);

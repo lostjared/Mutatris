@@ -12,5 +12,6 @@ set(SOURCES ${CMAKE_SOURCE_DIR}/main.cpp ${CMAKE_SOURCE_DIR}/quadtris.cpp ${CMAK
 add_executable(Mutatris ${SOURCES})
 target_link_libraries(Mutatris ${SDL2_LIBRARIES} SDL2_ttf::SDL2_ttf ${PNG_LIBRARIES} ${ZLIB_LIBRARIES})
 target_include_directories(Mutatris PUBLIC ${SDL2_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS} /usr/local/include/SDL2 /usr/include/SDL2)
-target_compile_options(Mutatris PRIVATE -O2)
+list(APPEND COMPILER_FLAGS "-Wall" "-pedantic" "-O2")
+target_compile_options(Mutatris PRIVATE ${COMPILER_FLAGS})
 message(STATUS "Got it Configured")

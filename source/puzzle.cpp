@@ -10,13 +10,13 @@ namespace obj {
 
     PuzzleObject::~PuzzleObject() {
         std::cout << "Mutatris: Game Released...\n";
-        for(int i = 0; i < blocks.size(); ++i) {
+        for(size_t i = 0; i < blocks.size(); ++i) {
             SDL_DestroyTexture(blocks[i]);
         }
-        for(int i = 0; i < backgrounds.size(); ++i) {
+        for(size_t i = 0; i < backgrounds.size(); ++i) {
             SDL_DestroyTexture(backgrounds[i]);
         }
-        for(int i = 0; i <= 3;  ++i) {
+        for(size_t i = 0; i <= 3;  ++i) {
             SDL_DestroyTexture(game_textures[i]);
         }
 
@@ -28,7 +28,7 @@ namespace obj {
               
         SDL_Texture* old_target = SDL_GetRenderTarget(renderer);
         SDL_SetRenderTarget(renderer, texture);
-        SDL_RenderCopy(renderer, backgrounds[game.level < backgrounds.size() ? game.level : backgrounds.size()-1], nullptr, nullptr);
+        SDL_RenderCopy(renderer, backgrounds[game.level < static_cast<int>(backgrounds.size()) ? game.level : backgrounds.size()-1], nullptr, nullptr);
         for (int i = 0; i < game.grid[focus].width(); ++i) {
             for (int z = 0; z < game.grid[focus].height(); ++z) {
                 int pos_x = 32 * i;
@@ -97,7 +97,7 @@ namespace obj {
 
 
     void PuzzleObject::draw(SDL_Renderer *renderer) {
-        SDL_RenderCopy(renderer, backgrounds[game.level < backgrounds.size() ? game.level : backgrounds.size()-1], nullptr, nullptr);
+        SDL_RenderCopy(renderer, backgrounds[game.level < static_cast<int>(backgrounds.size()) ? game.level : backgrounds.size()-1], nullptr, nullptr);
         drawGrid(renderer, game_textures[0], 0);
         int width = 0, height = 0;
         SDL_QueryTexture(game_textures[0], nullptr, nullptr, &width, &height);
