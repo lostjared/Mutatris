@@ -274,19 +274,30 @@ namespace puzzle {
 
     void PuzzleGame::procBlocks() {
 
-        if (timeout > 1000) {
+        if (timeout > 1100) {
             level = 0;
-        } else if (timeout <= 1000 && timeout > 800) {
+        } else if (timeout <= 1100 && timeout > 1000) {
             level = 1;
-        } else if (timeout <= 800 && timeout > 600) {
+        } else if (timeout <= 1000 && timeout > 900) {
             level = 2;
-        } else if (timeout <= 600 && timeout > 400) {
+        } else if (timeout <= 900 && timeout > 800) {
             level = 3;
-        } else if (timeout <= 400 && timeout > 0) {
+        } else if (timeout <= 800 && timeout > 700) {
             level = 4;
-        } else if (timeout <= 0) {
+        } else if (timeout <= 700 && timeout > 600) {
             level = 5;
+        }else if (timeout <= 600 && timeout > 500) {
+            level = 6;
+        }else if (timeout <= 500 && timeout > 400) {
+            level = 7;
+        }else if (timeout <= 400 && timeout > 300) {
+            level = 8;
+        }else if (timeout <= 300 && timeout > 200) {
+            level = 9;
+        }else if (timeout <= 200) {
+            level = 10;
         }
+
         for(int j = 0; j < 4; ++j) {
             for(int i = 0; i < grid[j].width(); ++i) {
                 for(int z = 0; z < grid[j].height(); ++z) {

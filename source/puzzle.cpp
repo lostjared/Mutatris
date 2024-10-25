@@ -251,7 +251,7 @@ namespace obj {
         for(int i = 0; filenames[i] != 0; ++i) {
             blocks.push_back(util::loadTexture(renderer, filenames[i]));
         }
-        static const char *bg_filenames[] = {"blocks.png","blocks1.png","blocks2.png","blocks3.png", "blocks4.png", 0};
+        static const char *bg_filenames[] = {"blocks.png","blocks1.png","blocks2.png","blocks3.png", "blocks4.png", "blocks5.png", "blocks6.png", "blocks7.png", "blocks8.png", "blocks9.png", "blocks10.png", 0};
         for(int i = 0; bg_filenames[i] != 0; ++i) {
             backgrounds.push_back(util::loadTexture(renderer, bg_filenames[i]));
         }
