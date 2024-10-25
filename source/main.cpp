@@ -42,7 +42,9 @@ int main(int argc, char **argv) {
 
     Argz<std::string> argz(argc, argv);
     argz.addOptionSingleValue('p', "path")
-    .addOptionSingleValue('r', "Resolution");
+    .addOptionSingleValue('r', "Resolution")
+    .addOptionDoubleValue('P', "path", "path to assets")
+    .addOptionDoubleValue('R', "resolution", "window resolution");
 
     int value = 0;
     Argument<std::string> arg;
@@ -51,8 +53,11 @@ int main(int argc, char **argv) {
         while((value = argz.proc(arg)) != -1) {
             switch(value) {
                 case 'p':
+                case 'P':
                     util::path = arg.arg_value;
                     break;
+                
+                case 'R':
                 case 'r': {
                     std::string resolution = arg.arg_value;
                     auto pos = resolution.find("x");
