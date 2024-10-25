@@ -25,6 +25,7 @@ namespace obj {
     }
 
     void PuzzleObject::drawGrid(SDL_Renderer *renderer, SDL_Texture *texture, int focus) {
+              
         SDL_Texture* old_target = SDL_GetRenderTarget(renderer);
         SDL_SetRenderTarget(renderer, texture);
         SDL_RenderCopy(renderer, backgrounds[game.level < backgrounds.size() ? game.level : backgrounds.size()-1], nullptr, nullptr);
@@ -45,23 +46,7 @@ namespace obj {
             }
         }
 
-        static Uint32 previous_time = SDL_GetTicks();
-        Uint32 current_time = SDL_GetTicks();
-        if (current_time - previous_time >= 25) {        
-            for(int i = 0; i < game.grid[focus].width(); ++i) {
-                for(int z = 0; z < game.grid[focus].height(); ++z) {
-                    puzzle::Block *b = game.grid[focus].at(i, z);
-                    if(b && b->color < 0) {
-                        b->color --;
-                        if(b->color < -30) {
-                            b->color = 0;
-                        }
-                    }
-                }
-            }
-            previous_time = current_time;
-        }
-
+        
         if(cur_focus == focus) {
             int x_val = game.grid[focus].game_piece.getX();
             int y_val = game.grid[focus].game_piece.getY();  
@@ -86,6 +71,28 @@ namespace obj {
         }
         SDL_SetRenderTarget(renderer, old_target);
         game.procBlocks();
+    }
+
+    void PuzzleObject::twistColors() {
+        static Uint32 previous_time = SDL_GetTicks();
+        Uint32 current_time = SDL_GetTicks();
+        Uint32 delta_time = current_time - previous_time;
+        if (delta_time >= 25) {        
+            for(int focus = 0; focus <= 3; focus ++) {
+                for (int i = 0; i < game.grid[focus].width(); ++i) {
+                    for (int z = 0; z < game.grid[focus].height(); ++z) {
+                        puzzle::Block *b = game.grid[focus].at(i, z);
+                        if (b && b->color < 0) {
+                            b->color--;
+                            if (b->color < -60) {
+                                b->color = 0;
+                            }
+                        }
+                    }
+                }
+            }
+            previous_time += delta_time; 
+        }
     }
 
 
@@ -123,6 +130,8 @@ namespace obj {
         util::printText(renderer, font, 25, 55, "Direction: " + std::to_string(cur_focus), {255, 255, 255, 255});
         util::printText(renderer, font, 25, 85, "Level: " + std::to_string(game.level+1) + " Timeout: " + std::to_string(game.timeout), {255, 255, 255, 255});
         
+        twistColors();
+
         static Uint32 previous_time = SDL_GetTicks();
         Uint32 current_time = SDL_GetTicks();
         if (current_time - previous_time >= game.timeout) {

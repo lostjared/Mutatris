@@ -25,6 +25,7 @@ namespace obj {
         int cur_focus = 0;
         SDL_Texture *game_textures[4] = {nullptr};
         TTF_Font *font = nullptr;
+        void twistColors();
     };
 
 }

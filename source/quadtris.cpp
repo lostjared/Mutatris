@@ -497,7 +497,7 @@ namespace puzzle {
         }
         moveDown_Blocks();
     }
-	
+    	
     void PuzzleGame::moveDown_Blocks() {
         for(int j = 0; j < 4; ++j) {
             for(int i = 0; i < grid[j].width(); ++i) {
