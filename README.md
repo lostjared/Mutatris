@@ -17,6 +17,7 @@ Welcome to **Mutatris**, a fast-paced puzzle game where you control blocks on a 
   - **Move Down**: Move the active block down.
   - **Drop Block**: Instantly drop the active block to the bottom of the grid. Press the 'S" key
   - **Rotate Block**: Rotate the active block to change its orientation. Press the 'A' or Space key
+  - **Shift Colors**: Press the opposite of the current direction arrow key to shift the blocks. If the Direction is 0 press Up arrow, if the Direction is 1 press Right arrow, if the Direction is 2 press Down arrow, is the Direction is 3 press Left arrow
 
 - **Objective:**
   Align 3 or more blocks of the same color horizontally, vertically, or diagonally. When a match is made, the blocks will disappear, and your score will increase. If 4 blocks match, you will earn a combo bonus.
