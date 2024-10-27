@@ -12,7 +12,7 @@ Welcome to **Mutatris**, a fast-paced puzzle game where you control blocks on a 
 ## How to Play
 
 - **Controls:**
-- To move the blocks, it depends on the current Direction use the Arrow keys
+  - **To move the blocks**: movement depends on the current Direction use the Arrow keys
   - **Move Left**: Shift the active block left.
   - **Move Right**: Shift the active block right.
   - **Move Down**: Move the active block down.
