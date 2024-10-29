@@ -62,6 +62,10 @@ namespace obj {
                     cx = 32 * (x_val - q);
                     cy = (16 * y_val);
                     break;
+                    case 3:
+                    cx = 32 * x_val;
+                    cy = (16 * y_val) - (16 * q);
+                    break;
                 }
                 SDL_Rect pos_rc = { cx, cy, 32, 16 };
                 puzzle::Block *b = game.grid[focus].game_piece.at(q);

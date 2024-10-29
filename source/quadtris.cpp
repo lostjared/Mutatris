@@ -146,6 +146,12 @@ namespace puzzle {
                 b[1] = grid->at(x-1, y);
                 b[2] = grid->at(x-2, y);
                 break;
+            case 3:
+                b[0] = grid->at(x, y);
+                b[1] = grid->at(x, y-1);
+                b[2] = grid->at(x, y-2);
+                break;
+
         }
 
         if(b[0] != nullptr &&  b[1] != nullptr && b[2] != nullptr) {
@@ -176,6 +182,11 @@ namespace puzzle {
                 b[1] = grid->at(x-1, y);
                 b[2] = grid->at(x-2, y);
                 break;
+            case 3:
+                b[0] = grid->at(x, y);
+                b[1] = grid->at(x, y-1);
+                b[2] = grid->at(x, y-2);
+                break;
         }
 
         if(b[0] != nullptr && b[1] != nullptr && b[2] != nullptr) {
@@ -188,7 +199,7 @@ namespace puzzle {
     void Piece::shiftDirection() {
         int old_dir = direction;
         direction ++;
-        if(direction > 2)
+        if(direction > 3)
             direction = 0;
 
         if(!checkLocation(x, y)) {
@@ -243,7 +254,7 @@ namespace puzzle {
     }
 
     bool GameGrid::canMoveDown() {
-        if(game_piece.checkLocation(game_piece.getX(), game_piece.getY()) == false && game_piece.getY() == 0) {
+        if(game_piece.getDirection() != 3 && game_piece.checkLocation(game_piece.getX(), game_piece.getY()) == false && game_piece.getY() == 0) {
             return false;
         }
         return true;
