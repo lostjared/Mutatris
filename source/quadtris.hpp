@@ -4,7 +4,12 @@
 #include <vector>
 #include<functional>
 
+#ifdef HAS_SOUND
+#include"sound.hpp"
+#endif
+
 namespace puzzle {
+
 
 	class Block {
 	public:

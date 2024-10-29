@@ -3,6 +3,10 @@
 #include"puzzle.hpp"
 #include<cstdlib>
 
+#ifdef HAS_SOUND
+#include"sound.hpp"
+#endif
+
 namespace obj {
 
 
@@ -25,6 +29,9 @@ namespace obj {
         font = util::loadFont("font.ttf", 54);
         large_font = util::loadFont("font.ttf", 275);
         std::cout << "Mutatris: Intro Init...\n";
+        #ifdef HAS_SOUND
+        snd::playsound(1);
+        #endif
     }
 
     IntroObject::~IntroObject() {

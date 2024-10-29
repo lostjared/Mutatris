@@ -15,6 +15,9 @@
 #include<emscripten/emscripten.h>
 #endif
 #include"version_info.hpp"
+#ifdef HAS_SOUND
+#include"sound.hpp"
+#endif
 
 SDL_Texture *main_texture;
 bool running = true;
@@ -88,7 +91,11 @@ int main(int argc, char **argv) {
         std::cerr << "Mutatris: Syntax Error: " << e.text() << "\n";
     }
 
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+#ifdef HAS_SOUND
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
+#else
+    if(SDL_Init(SDL_INIT_VIDEO) != 0) {
+#endif
         return EXIT_FAILURE;
     }
 
@@ -106,6 +113,11 @@ int main(int argc, char **argv) {
         SDL_Quit();
         return EXIT_FAILURE;
     }
+
+#ifdef HAS_SOUND
+    snd::init();
+#endif
+
 
     SDL_Window* window = SDL_CreateWindow("Mutatris", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, full == true ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_SHOWN);
     if (!window) {
@@ -139,7 +151,9 @@ int main(int argc, char **argv) {
 #endif
  
     obj::object.reset();
-
+#ifdef HAS_SOUND
+    snd::release();
+#endif
     SDL_DestroyTexture(main_texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

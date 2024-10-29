@@ -64,6 +64,7 @@ namespace puzzle {
             blocks[1].color = 1+(rand()%(grid->numBlocks()-1));
             blocks[2].color = 1+(rand()%(grid->numBlocks()-1));
         } while(blocks[0].color == blocks[1].color && blocks[0].color == blocks[2].color);
+        direction = 0;
     }
 
     void Piece::shiftColors() {
@@ -334,6 +335,11 @@ namespace puzzle {
                             if((clears%4)==0) {
                                 timeout -= 25;
                             }
+
+                            #ifdef HAS_SOUND
+                            snd::playsound(0);
+                            #endif
+
                             return;
                         }
                     }
@@ -359,6 +365,12 @@ namespace puzzle {
                             if((clears%4)==0) {
                                 timeout -= 25;
                             }
+
+                            #ifdef HAS_SOUND
+                            snd::playsound(0);
+                            #endif
+
+
                             return;
                         }
                     }
@@ -409,6 +421,12 @@ namespace puzzle {
                             if((clears%4)==0) {
                                 timeout -= 25;
                             }
+
+                            #ifdef HAS_SOUND
+                            snd::playsound(0);
+                            #endif
+
+
                             return;
                         }
                     }
@@ -438,6 +456,12 @@ namespace puzzle {
                     b[0]->color = -1;
                     b[1]->color = -1;
                     b[2]->color = -1;
+
+                        #ifdef HAS_SOUND
+                        snd::playsound(0);
+                        #endif
+
+
                     return;
                 }
             }
@@ -456,6 +480,10 @@ namespace puzzle {
                     b[2]->color = -1;
                     b[3]->color = -1;
                     b[0]->color = -1;
+
+                    #ifdef HAS_SOUND
+                    snd::playsound(0);
+                    #endif
                 }
             }
         }
@@ -485,6 +513,9 @@ namespace puzzle {
                     b[0]->color = -1;
                     b[1]->color = -1;
                     b[2]->color = -1;
+                    #ifdef HAS_SOUND
+                    snd::playsound(0);
+                    #endif
                     return;
                 }
             }
@@ -514,6 +545,9 @@ namespace puzzle {
                     b[0]->color = -1;
                     b[1]->color = -1;
                     b[2]->color = -1;
+                    #ifdef HAS_SOUND
+                    snd::playsound(0);
+                    #endif
                     return;
                 }
             }
