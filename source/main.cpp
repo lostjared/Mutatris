@@ -118,7 +118,6 @@ int main(int argc, char **argv) {
     snd::init();
 #endif
 
-
     SDL_Window* window = SDL_CreateWindow("Mutatris", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, full == true ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_SHOWN);
     if (!window) {
         SDL_Quit();

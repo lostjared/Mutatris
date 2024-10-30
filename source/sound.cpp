@@ -22,7 +22,7 @@ namespace snd {
 
     void init() {
         if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1) {
-            std::cerr << "Error initalzing audio device...\n";
+            std::cerr << "Mutatris: Error initalzing audio device...\n";
             std::cerr.flush();
             std::exit(EXIT_FAILURE);
         }
