@@ -1,5 +1,5 @@
 CXX=em++
-LIBS_PATH=/home/jared/emscripten-libs
+LIBS_PATH=./emscripten-libs
 ZLIB_INCLUDE= -I${LIBS_PATH}/zlib/include
 PNG_INCLUDE=-I${LIBS_PATH}/libpng/include
 ZLIB_LIB=$(LIBS_PATH)/zlib/lib/libz.a
