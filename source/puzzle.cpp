@@ -130,9 +130,10 @@ namespace obj {
         SDL_Rect rc4 = { window_x, window_y, width, height };
         SDL_RenderCopyEx(renderer, game_textures[3], nullptr, &rc4, 90.0, nullptr, SDL_FLIP_HORIZONTAL);  
 
-        util::printText(renderer, font, 25, 25, "Score: " + std::to_string(game.score), {255,255,255,255});
-        util::printText(renderer, font, 25, 55, "Direction: " + std::to_string(cur_focus), {255, 255, 255, 255});
-        util::printText(renderer, font, 25, 85, "Level: " + std::to_string(game.level+1) + " Timeout: " + std::to_string(game.timeout), {255, 255, 255, 255});
+        util::printText(renderer, font, 25, 25, "Level: " + std::to_string(game.level+1) + " Timeout: " + std::to_string(game.timeout), {255, 255, 255, 255});
+        util::printText(renderer, font, 25, 55, "Score: " + std::to_string(game.score), {255,255,255,255});
+        util::printText(renderer, font, 25, 85, "Direction: " + std::to_string(cur_focus), {255, 255, 255, 255});
+        
         
         twistColors();
 
