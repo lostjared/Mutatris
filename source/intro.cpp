@@ -14,6 +14,7 @@ namespace obj {
         SDL_RenderCopy(renderer, logo, nullptr, nullptr);
         util::printText(renderer, font, 25, 25, "[Press Enter to Play]", {255,255,255,255});
         util::printText(renderer, large_font, 50, 250, "Mutatris", {255, 255, 255, 255});
+        util::printText(renderer, font, 1280-500, 720-50, "lostsidedead.biz", {0,0,255,255});
     }
 
     void IntroObject::event(SDL_Renderer *renderer, SDL_Event &e) {
