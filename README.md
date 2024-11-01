@@ -38,6 +38,7 @@ Welcome to **Mutatris**, a fast-paced puzzle game where you control blocks on a 
 ## Game Features
 
 - **Multiple Grids**: Manage multiple grids simultaneously, switching between them to optimize your block placements.
+- **Rotate and Shift*: The blocks can be rotated or colors shifted.
 - **Speeding Up**: Every 4 clears, the game speeds up, making it more challenging.
 - **Score Tracking**: Try to get the highest score by clearing rows and triggering combos.
 - **Randomized Blocks**: The blocks come in different colors and are randomized to keep each game fresh.
