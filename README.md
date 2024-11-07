@@ -7,33 +7,32 @@
 ![image](https://github.com/user-attachments/assets/d0e9c8fc-5feb-498d-a1d6-afed076c09d1)
 
 
-Welcome to **Mutatris**, a fast-paced puzzle game where you control blocks on a grid and aim to clear rows and columns by aligning blocks of the same color. The more you clear, the higher your score—can you keep up as the game speeds up?
+Welcome to **Mutatris**, a dynamic and fast-paced puzzle game where quick thinking and strategy are key. Align and clear blocks on a fast-moving grid to score points, managing multiple grids as you race against increasing speed. Perfect your timing and master the mechanics!
 
 ## How to Play
 
-- **Controls:**
-  - **To move the blocks**: movement depends on the current Direction use the Arrow keys
-  - **Move Left**: Shift the active block left.
-  - **Move Right**: Shift the active block right.
-  - **Move Down**: Move the active block down.
-  - **Drop Block**: Instantly drop the active block to the bottom of the grid. Press the 'S" key
-  - **Rotate Block**: Rotate the active block to change its orientation. Press the 'A' or Space key
-  - **Shift Colors**: Press the opposite of the current direction arrow key to shift the blocks. If the Direction is 0 press Up arrow, if the Direction is 1 press Right arrow, if the Direction is 2 press Down arrow, is the Direction is 3 press Left arrow
+### Controls
+- **Movement**: Control block positioning with directional inputs based on your current orientation.
+  - **Move Left/Right**: Shift the active block horizontally with the left and right arrow keys.
+  - **Move Down**: Press the down arrow to move the active block down.
+  - **Instant Drop**: Send the active block directly to the bottom by pressing the **S** key.
+  - **Rotate Block**: Change the block’s orientation with the **A** or **Space** key.
+  - **Shift Colors**: Adjust colors within the block by pressing the arrow key opposite to your direction (e.g., press **Up** if moving in Direction 0).
 
-- **Objective:**
-  Align 3 or more blocks of the same color horizontally, vertically, or diagonally. When a match is made, the blocks will disappear, and your score will increase. If 4 blocks match, you will earn a combo bonus.
+### Objective
+Align groups of 3 or more blocks of the same color in any direction—horizontal, vertical, or diagonal—to clear them from the grid. Aim for combos of 4 blocks or more for bonus points and strategic advantage.
 
-- **Game Mechanics:**
-  - The game features multiple grids, each with its own active block.
-  - As the game progresses, the blocks drop faster, and you'll need to plan your moves quickly.
-  - Keep an eye on your **clears** count—every 4 clears will speed up the game.
+### Game Mechanics
+- **Multi-Grid Management**: Each grid has its own active block to manage, adding layers of complexity.
+- **Increasing Speed**: Every 4 successful clears will increase the game’s speed, challenging your reaction time.
+- **Combo Bonuses**: Clearing 4 blocks simultaneously grants extra points, rewarding skillful play.
 
-- **Scoring:**
-  - Aligning 3 blocks: +1 point.
-  - Aligning 4 blocks (combo): +10 points.
+### Scoring
+- **Match 3 blocks**: +1 point.
+- **Match 4 blocks (Combo)**: +10 points for strategic clears.
 
-- **Game Over:**
-  The game ends when a block reaches the top of any grid, preventing you from placing new blocks.
+### Game Over
+The game ends when blocks reach the top of any grid, blocking further movement. Stay ahead and keep the grids clear to avoid defeat!
 
 ## Game Features
 
@@ -43,3 +42,5 @@ Welcome to **Mutatris**, a fast-paced puzzle game where you control blocks on a 
 - **Score Tracking**: Try to get the highest score by clearing rows and triggering combos.
 - **Randomized Blocks**: The blocks come in different colors and are randomized to keep each game fresh.
 
+
+Get ready to challenge yourself with **Mutatris**’s thrilling pace and engaging mechanics—how high can you score?
