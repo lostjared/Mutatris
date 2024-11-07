@@ -20,7 +20,7 @@ Welcome to **Mutatris**, a dynamic and fast-paced puzzle game where quick thinki
   - **Shift Colors**: Adjust colors within the block by pressing the arrow key opposite to your direction (e.g., press **Up** if moving in Direction 0).
 
 ### Objective
-Align groups of 3 or more blocks of the same color in any direction—horizontal, vertical, or diagonal—to clear them from the grid. Aim for combos of 4 blocks or more for bonus points and strategic advantage.
+Align groups of 3 or 4 blocks of the same color in any direction—horizontal, vertical, or diagonal—to clear them from the grid. Aim for combos of 4 blocks or more for bonus points and strategic advantage.
 
 ### Game Mechanics
 - **Multi-Grid Management**: Each grid has its own active block to manage, adding layers of complexity.
