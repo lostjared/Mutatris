@@ -262,14 +262,25 @@ namespace puzzle {
     }
 
     
-    PuzzleGame::PuzzleGame() {
+    PuzzleGame::PuzzleGame(int difficulty) : diff{difficulty} {
         newGame();
     }
 
     void PuzzleGame::newGame() {
         srand(static_cast<int>(time(0)));
         score = 0;
-        timeout = 1200;
+        switch(diff) {
+            case 0:
+            timeout = 1200;
+            break;
+            case 1:
+            timeout = 900;
+            break; 
+            case 2:
+            timeout = 650;
+            break;
+        }
+        
         clears = 0;
         grid[0].initGrid(12, (720/16/2)+1);
         grid[1].initGrid(12, 28);

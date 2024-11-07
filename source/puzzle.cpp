@@ -8,6 +8,9 @@
 
 namespace obj {
 
+
+    PuzzleObject::PuzzleObject(int diff) : game{diff} {}
+
     PuzzleObject::~PuzzleObject() {
         std::cout << "Mutatris: Game Released...\n";
         for(size_t i = 0; i < blocks.size(); ++i) {

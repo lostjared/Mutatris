@@ -77,7 +77,7 @@ namespace puzzle {
 
 	class PuzzleGame  {
 	public:
-		PuzzleGame();
+		PuzzleGame(int difficulty);
 		void setCallback (Callback callback);
 		void newGame();
 		GameGrid grid[4];
@@ -87,6 +87,8 @@ namespace puzzle {
 		int level =  0;
 		void procBlocks();
 		void moveDown_Blocks();
+	private:
+		int diff = 0;
 	};
 
 }

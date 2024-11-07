@@ -16,8 +16,14 @@ namespace obj {
         virtual void load(SDL_Renderer *renderer) override;
     protected:
         SDL_Texture *logo = nullptr;
-        TTF_Font *font = nullptr;
+        SDL_Texture *start_screen = nullptr;
+        TTF_Font *font = nullptr, *medium_font;
         TTF_Font *large_font = nullptr;
+        TTF_Font *small_font = nullptr;
+        TTF_Font *diff_font = nullptr;
+        int cur_screen = 0;
+        int cursor_pos = 0;
+
     };
 }
 

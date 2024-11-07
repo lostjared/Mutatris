@@ -11,7 +11,7 @@ namespace obj {
 
     class PuzzleObject : public GameObject {
     public:
-        PuzzleObject() = default;
+        PuzzleObject(int diff);
         virtual ~PuzzleObject();
         virtual void draw(SDL_Renderer *renderer) override;
         virtual void event(SDL_Renderer *renderer, SDL_Event &e) override;
