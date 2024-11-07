@@ -325,6 +325,10 @@ namespace puzzle {
                                 if(blocks[0]->color == blocks[3]->color) {
                                     blocks[3]->color = -1;
                                     score += 10;
+                                    #ifdef HAS_SOUND
+                                        snd::playsound(0);
+                                    #endif
+                
                                 }
                             }
                             blocks[0]->color = -1;
@@ -355,6 +359,10 @@ namespace puzzle {
                                 if(blocks[0]->color == blocks[3]->color) {
                                     blocks[3]->color = -1;
                                     score += 10;
+                                    #ifdef HAS_SOUND
+                                        snd::playsound(0);
+                                    #endif
+
                                 }
                             }
                             blocks[0]->color = -1;
@@ -386,6 +394,10 @@ namespace puzzle {
                                 if (blocks[0]->color == blocks[3]->color) {
                                     blocks[3]->color = -1;
                                     score += 10;
+                                    #ifdef HAS_SOUND
+                                        snd::playsound(0);
+                                    #endif
+
                                 }
                             }
                             blocks[0]->color = -1;
@@ -411,6 +423,10 @@ namespace puzzle {
                                 if (blocks[0]->color == blocks[3]->color) {
                                     blocks[3]->color = -1;
                                     score += 10;
+                                    #ifdef HAS_SOUND
+                                        snd::playsound(0);
+                                    #endif
+
                                 }
                             }
                             blocks[0]->color = -1;
@@ -446,6 +462,9 @@ namespace puzzle {
                     if(b[0]->color > 0 && b[3] && b[0]->color == b[3]->color) {
                         score += 10;
                         b[3]->color = -1;
+                        #ifdef HAS_SOUND
+                            snd::playsound(0);
+                        #endif
                     }
 
                     score++;
@@ -470,6 +489,10 @@ namespace puzzle {
                     if(b[1] && b[2]->color == b[1]->color) {
                         score += 10;
                         b[1]->color = -1;
+                        #ifdef HAS_SOUND
+                            snd::playsound(0);
+                        #endif
+
                     }
 
                     score ++;
@@ -503,6 +526,9 @@ namespace puzzle {
                     if(b[3] && b[0]->color == b[3]->color) {
                         score += 10;
                         b[3]->color = -1;
+                        #ifdef HAS_SOUND
+                            snd::playsound(0);
+                        #endif
                     }
 
                     score++;
@@ -536,6 +562,9 @@ namespace puzzle {
                     if(b[3] && b[0]->color == b[3]->color) {
                         score += 10;
                         b[3]->color = -1;
+                        #ifdef HAS_SOUND
+                            snd::playsound(0);
+                        #endif
                     }
                     score++;
                     clears++;
