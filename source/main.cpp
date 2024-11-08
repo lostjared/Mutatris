@@ -92,9 +92,9 @@ int main(int argc, char **argv) {
     }
 
 #ifdef HAS_SOUND
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) != 0) {
 #else
-    if(SDL_Init(SDL_INIT_VIDEO) != 0) {
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0) {
 #endif
         return EXIT_FAILURE;
     }
@@ -137,6 +137,8 @@ int main(int argc, char **argv) {
 
     main_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, TEX_WIDTH, TEX_HEIGHT);
     running = true;
+
+    util::initJoystick();
     
     obj::setObject(new obj::IntroObject());
     obj::object->load(renderer);
@@ -153,6 +155,7 @@ int main(int argc, char **argv) {
 #ifdef HAS_SOUND
     snd::release();
 #endif
+    util::closeJoystick();
     SDL_DestroyTexture(main_texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

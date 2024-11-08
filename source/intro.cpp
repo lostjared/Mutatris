@@ -37,12 +37,43 @@ namespace obj {
     }
 
     void IntroObject::event(SDL_Renderer *renderer, SDL_Event &e) {
+
+        if(cur_screen == 0  && e.type == SDL_JOYBUTTONDOWN) {
+            switch(e.jbutton.button) {
+                case 7:
+                    cur_screen = 1;
+                break;
+            }
+        }
+        
+        if(cur_screen == 1 && e.type == SDL_JOYHATMOTION) {
+            switch(e.jhat.value) {
+                case 8:
+                if(cursor_pos > 0) cursor_pos--;
+                break;
+                case 2:
+                if(cursor_pos < 2) cursor_pos++;
+                break;
+            }
+        }
+
         if(cur_screen == 0 && e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN) {
             cur_screen = 1;
             return;
         }
 
+        if(cur_screen == 1 && e.type == SDL_JOYBUTTONDOWN) {
+            switch(e.jbutton.button) {
+                case 0:
+                obj::setObject(new PuzzleObject(cursor_pos));
+                obj::object->load(renderer);
+                break;
+            }
+        }
+
         if(cur_screen == 1 && e.type == SDL_KEYDOWN) {
+
+
             switch(e.key.keysym.sym) {
                 case SDLK_LEFT:
                 if(cursor_pos > 0) cursor_pos--;

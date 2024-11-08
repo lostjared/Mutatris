@@ -3,6 +3,8 @@
 
 namespace util {
 
+    std::vector<SDL_Joystick *> stick;
+
     #ifdef FOR_WASM
     std::string path = "/assets";
     #else
@@ -73,6 +75,26 @@ namespace util {
 
     SDL_Surface *loadSurface(const std::string &name) {
         return png::LoadPNG(getFilePath(name).c_str());
+    }
+
+    void initJoystick() {
+
+        for(int i = 0; i < SDL_NumJoysticks(); ++i) {
+            SDL_Joystick *stick_ = SDL_JoystickOpen(i);
+            if(!stick_) {
+                std::cout << "Mutatris: Joystick disabled..\n";
+            } else {
+                std::cout << "Mutatris: Joystick: " << SDL_JoystickName(stick_) << " enabled...\n";
+            }
+            stick.push_back(stick_);
+        }
+        SDL_JoystickEventState(SDL_ENABLE);
+    }
+
+    void closeJoystick() {
+        for(int i = 0; i < SDL_NumJoysticks(); ++i) {
+            SDL_JoystickClose(stick[i]);
+        }
     }
 
 }

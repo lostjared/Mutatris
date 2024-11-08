@@ -115,7 +115,6 @@ namespace obj {
 
     void PuzzleObject::draw(SDL_Renderer *renderer) {
 
-
         if(paused) {
             SDL_RenderCopy(renderer, pause_menu, nullptr, nullptr);
             util::printText(renderer, paused_large, 580, 325, "Paused", {255, 255, 255, 255});
@@ -170,6 +169,80 @@ namespace obj {
                 obj::object->load(renderer);
             }
         }
+
+        if(!util::stick.empty()) {
+            static Uint32 previous_time = SDL_GetTicks();
+            Uint32 current_time = SDL_GetTicks();
+            if (current_time - previous_time >= 100) {
+                for(size_t i =  0; i < util::stick.size(); ++i) {
+                    int btn = SDL_JoystickGetHat(util::stick[i], 0);
+                    procHat(cur_focus, btn);   
+                }
+                previous_time = current_time;
+            }
+        }
+    }
+
+    void PuzzleObject::procHat(int cur_focus, int value) {
+        if(cur_focus == 0) {
+                switch(value) {
+                    case 8:
+                        game.grid[cur_focus].game_piece.moveLeft();
+                    break;
+                    case 2:
+                        game.grid[cur_focus].game_piece.moveRight(); 
+                    break;
+                    case 4:
+                        game.grid[cur_focus].game_piece.moveDown();
+                    break;
+                    default:
+                    break;
+                }
+
+            } else if(cur_focus == 1) {
+                switch(value) {
+                    case 4:
+                        game.grid[cur_focus].game_piece.moveLeft();
+                    break;
+                    case 1:
+                        game.grid[cur_focus].game_piece.moveRight();     
+                    break;
+                    case 2:
+                        game.grid[cur_focus].game_piece.moveDown();
+                    break;
+                    default:
+                    break;
+                }
+
+            } else if(cur_focus == 2) {
+                switch(value) {
+                    case 1:
+                        game.grid[cur_focus].game_piece.moveDown();     
+                    break;
+                    case 8:
+                        game.grid[cur_focus].game_piece.moveLeft(); 
+                    break;
+                    case 2:
+                        game.grid[cur_focus].game_piece.moveRight();
+                    break;
+                    default:
+                    break;
+                }
+            } else if(cur_focus == 3) {
+                switch(value) {
+                    case 4:
+                        game.grid[cur_focus].game_piece.moveLeft();
+                    break;
+                    case 1:
+                        game.grid[cur_focus].game_piece.moveRight();     
+                    break;
+                    case 8:
+                        game.grid[cur_focus].game_piece.moveDown(); 
+                    break;
+                    default:
+                    break;
+                }
+            }
     }
 
     void PuzzleObject::event(SDL_Renderer *renderer, SDL_Event &e)  {
@@ -192,7 +265,60 @@ namespace obj {
             return;
         }
 
+        if(e.type == SDL_JOYHATMOTION) {
+            if(cur_focus == 0) {
+                switch(e.jhat.value) {
+                    case 1:
+                        game.grid[cur_focus].game_piece.shiftColors(); 
+                    break;
+                    default:
+                    break;
+                }
+
+            } else if(cur_focus == 1) {
+                switch(e.jhat.value) {
+                    case 8:
+                        game.grid[cur_focus].game_piece.shiftColors(); 
+                    break;
+                    default:
+                    break;
+                }
+
+            } else if(cur_focus == 2) {
+                switch(e.jhat.value) {
+                    case 4:
+                        game.grid[cur_focus].game_piece.shiftColors();
+                    break;
+                    default:
+                    break;
+                }
+            } else if(cur_focus == 3) {
+                switch(e.jhat.value) {
+                    case 2:
+                        game.grid[cur_focus].game_piece.shiftColors();
+                    break;
+                    default:
+                    break;
+                }
+            }
+        }
+
         switch(e.type) {
+            case SDL_JOYBUTTONDOWN:
+            switch(e.jbutton.button) {
+                case 0:
+                    game.grid[cur_focus].game_piece.shiftDirection();
+                break;
+                case 1:
+                    game.grid[cur_focus].game_piece.shiftColors(); 
+                break;
+                case 2:
+                    game.grid[cur_focus].game_piece.drop();
+                break;
+            }
+            break;
+          
+
             case SDL_KEYDOWN: {
                 if(cur_focus == 0) {
                     switch(e.key.keysym.sym) {

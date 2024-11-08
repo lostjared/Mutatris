@@ -29,6 +29,7 @@ namespace obj {
         TTF_Font *font = nullptr;
         TTF_Font *paused_small, *paused_large;
         void twistColors();
+        void procHat(int cur_focus, int value);
     };
 
 }
