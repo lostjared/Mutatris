@@ -23,8 +23,18 @@ namespace obj {
             SDL_DestroyTexture(game_textures[i]);
         }
 
+        if(pause_menu)
+            SDL_DestroyTexture(pause_menu);
+
+
         if(font)
             TTF_CloseFont(font);
+        
+        if(paused_small)
+            TTF_CloseFont(paused_small);
+
+        if(paused_large)
+            TTF_CloseFont(paused_large);
     }
 
     void PuzzleObject::drawGrid(SDL_Renderer *renderer, SDL_Texture *texture, int focus) {
@@ -104,6 +114,15 @@ namespace obj {
 
 
     void PuzzleObject::draw(SDL_Renderer *renderer) {
+
+
+        if(paused) {
+            SDL_RenderCopy(renderer, pause_menu, nullptr, nullptr);
+            util::printText(renderer, paused_large, 580, 325, "Paused", {255, 255, 255, 255});
+            util::printText(renderer, paused_small, 600, 595, "Press Space",{255,255,255,255});
+            return;
+        }
+
         SDL_RenderCopy(renderer, backgrounds[game.level < static_cast<int>(backgrounds.size()) ? game.level : backgrounds.size()-1], nullptr, nullptr);
         drawGrid(renderer, game_textures[0], 0);
         int width = 0, height = 0;
@@ -154,6 +173,19 @@ namespace obj {
     }
 
     void PuzzleObject::event(SDL_Renderer *renderer, SDL_Event &e)  {
+
+
+        if(!paused) {
+            if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_p) {
+                paused = true;
+                return;
+            }
+        } else {
+            if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_SPACE)
+                paused = false;
+            
+            return;
+        }
 
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_s) {
             game.grid[cur_focus].game_piece.drop();
@@ -280,5 +312,9 @@ namespace obj {
             }
         }
         font = util::loadFont("font.ttf", 32);
+        pause_menu = util::loadTexture(renderer, "start.png");
+        paused_large = util::loadFont("font.ttf", 44);
+        paused_small = util::loadFont("font.ttf", 20);
+      
     }
 }

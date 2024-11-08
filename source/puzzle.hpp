@@ -21,10 +21,13 @@ namespace obj {
         puzzle::PuzzleGame game;
         std::vector<SDL_Texture *> blocks;
         std::vector<SDL_Texture *> backgrounds;
+        SDL_Texture *pause_menu = nullptr;
+        bool paused = false;
         int cur_level = 0;
         int cur_focus = 0;
         SDL_Texture *game_textures[4] = {nullptr};
         TTF_Font *font = nullptr;
+        TTF_Font *paused_small, *paused_large;
         void twistColors();
     };
 
