@@ -1,8 +1,10 @@
 #include"loadpng.hpp"
-#include <png.h>
-#include "SDL.h"
-#include <cstdio>
-#include <cstdlib>
+#include<png.h>
+#include"SDL.h"
+#include<cstdio>
+#include<cstdlib>
+#include<cctype>
+#include<string>
 
 #if defined(_MSC_VER)
     #if _MSC_VER >= 1930
@@ -12,6 +14,19 @@
 
 namespace png {
     SDL_Surface* LoadPNG(const char* file) {
+        auto chkString = [](const std::string &filename) -> bool {
+            std::string lwr;
+            for(size_t i =  0; i < filename.length(); ++i) 
+                lwr += tolower(filename[i]);
+            if(lwr.find(".png") == std::string::npos)
+                return false;
+
+            return true;
+        };
+
+        if(chkString(file) == false)
+            return NULL;
+
         #ifdef SAFE_FUNC
         FILE* fp = NULL;
         errno_t err = fopen_s(&fp, file, "rb");
