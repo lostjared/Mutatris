@@ -51,7 +51,11 @@ namespace obj {
 
 
     void StartupObject::event(SDL_Renderer *renderer, SDL_Event &e) {
-
+       // skip intro
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_SPACE) {
+                obj::setObject(new obj::IntroObject());
+                obj::object->load(renderer);
+        }
     }
 
     void StartupObject::load(SDL_Renderer *renderer) {
