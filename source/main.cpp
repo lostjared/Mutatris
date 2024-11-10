@@ -18,6 +18,7 @@
 #ifdef HAS_SOUND
 #include"sound.hpp"
 #endif
+#include"startup.hpp"
 
 SDL_Texture *main_texture;
 bool running = true;
@@ -140,7 +141,7 @@ int main(int argc, char **argv) {
 
     util::initJoystick();
     
-    obj::setObject(new obj::IntroObject());
+    obj::setObject(new obj::StartupObject());
     obj::object->load(renderer);
 
 #ifdef FOR_WASM

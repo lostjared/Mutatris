@@ -19,7 +19,7 @@ message(STATUS, "Sound disabled")
 endif()
 
 include_directories(${SDL2_INCLUDE_DIRS})
-set(SOURCES ${CMAKE_SOURCE_DIR}/main.cpp ${CMAKE_SOURCE_DIR}/quadtris.cpp ${CMAKE_SOURCE_DIR}/util.cpp ${CMAKE_SOURCE_DIR}/loadpng.cpp ${CMAKE_SOURCE_DIR}/intro.cpp ${CMAKE_SOURCE_DIR}/puzzle.cpp ${CMAKE_SOURCE_DIR}/game_over.cpp ${CMAKE_SOURCE_DIR}/sound.cpp)
+set(SOURCES ${CMAKE_SOURCE_DIR}/main.cpp ${CMAKE_SOURCE_DIR}/quadtris.cpp ${CMAKE_SOURCE_DIR}/util.cpp ${CMAKE_SOURCE_DIR}/loadpng.cpp ${CMAKE_SOURCE_DIR}/intro.cpp ${CMAKE_SOURCE_DIR}/puzzle.cpp ${CMAKE_SOURCE_DIR}/game_over.cpp ${CMAKE_SOURCE_DIR}/sound.cpp ${CMAKE_SOURCE_DIR}/startup.cpp)
 add_executable(Mutatris ${SOURCES})
 if(WITH_SDL_MIXER)
 target_link_libraries(Mutatris ${SDL2_LIBRARIES} SDL2_ttf::SDL2_ttf SDL2_mixer::SDL2_mixer ${PNG_LIBRARIES} ${ZLIB_LIBRARIES})
