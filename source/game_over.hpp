@@ -18,6 +18,8 @@ namespace obj {
         int score = 0, clears = 0;
         SDL_Texture *bg = nullptr;
         TTF_Font *font = nullptr;
+        int cur_screen = 0;
+
     };
 }
 

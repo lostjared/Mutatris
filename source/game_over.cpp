@@ -17,8 +17,16 @@ namespace obj {
         
     void GameOverObject::draw(SDL_Renderer *renderer) {
         SDL_RenderCopy(renderer, bg, nullptr, nullptr);
-        util::printText(renderer, font, 25, 25, "Game Over Score: " + std::to_string(score) + " Clears: " + std::to_string(clears), {255,255,255,255});
-        util::printText(renderer, font, 25, 100, "[ Press Space ]", {255, 255, 255, 255});
+        if(score < 200) {
+            util::printText(renderer, font, 25, 25, "Game Over Score: " + std::to_string(score) + " Clears: " + std::to_string(clears), {255,255,255,255});
+            util::printText(renderer, font, 25, 100, "[ Press Space ]", {255, 255, 255, 255});
+        } else {
+            util::printText(renderer, font, 25, 25, "High Score: " + std::to_string(score) + " Cleared: " + std::to_string(clears), {255,255,255,255});
+            util::printText(renderer, font, 25, 100, "Thanks for Playing! ", {255,255,255,255});
+            util::printText(renderer, font, 25, 200, "Programming by Jared Bruni", {255, 255, 255, 255});
+            util::printText(renderer, font, 25, 300, "Sound by Unknown", {255,255,255,255});
+            util::printText(renderer, font, 25, 400, "[Press Space]", {255,255,255,255});
+        }
     }
     
     void GameOverObject::event(SDL_Renderer *renderer, SDL_Event &e) {
