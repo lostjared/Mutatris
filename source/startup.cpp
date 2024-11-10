@@ -10,24 +10,45 @@
 namespace obj {
 
 
-    void StartupObject::draw(SDL_Renderer *renderer) {
-        if(cur_screen == 0) {
-            SDL_RenderCopy(renderer, logo, nullptr, nullptr);
-        } else if(cur_screen == 1) {
-            SDL_RenderCopy(renderer, jb_logo, nullptr, nullptr);
-        } else if(cur_screen == 2) {
-            SDL_RenderCopy(renderer, jb_logo, nullptr, nullptr);
-            obj::setObject(new obj::IntroObject());
-            obj::object->load(renderer);
+        void StartupObject::draw(SDL_Renderer *renderer) {
+            static Uint32 previous_time = SDL_GetTicks();
+            Uint32 current_time = SDL_GetTicks();
+            static int alpha = 255;
+            static bool fading_out = true;
+
+            if (cur_screen == 0) {
+                SDL_SetTextureAlphaMod(logo, alpha);
+                SDL_RenderCopy(renderer, logo, nullptr, nullptr);
+            } else if (cur_screen == 1) {
+                SDL_SetTextureAlphaMod(jb_logo, alpha);
+                SDL_RenderCopy(renderer, jb_logo, nullptr, nullptr);
+            } else if (cur_screen == 2) {
+                SDL_SetTextureAlphaMod(jb_logo, alpha);
+                SDL_RenderCopy(renderer, jb_logo, nullptr, nullptr);
+                obj::setObject(new obj::IntroObject());
+                obj::object->load(renderer);
+            }
+
+            if (current_time - previous_time >= 30) {
+                previous_time = current_time;
+                if (fading_out) {
+                    alpha -= 3;  
+                    if (alpha <= 0) {
+                        alpha = 0;
+                        fading_out = false;
+                        cur_screen++;
+                    }
+                } else {
+                    alpha += 3;
+                    if (alpha >= 255) {
+                        alpha = 255;
+                        fading_out = true;
+                        previous_time = SDL_GetTicks();
+                    }
+                }
+            }
         }
 
-        static Uint32 previous_time = SDL_GetTicks();
-        Uint32 current_time = SDL_GetTicks();
-        if (current_time - previous_time >= 3000) {
-            cur_screen ++;
-            previous_time = current_time;
-        }
-    }
 
     void StartupObject::event(SDL_Renderer *renderer, SDL_Event &e) {
 
