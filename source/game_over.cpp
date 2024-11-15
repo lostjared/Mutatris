@@ -19,7 +19,6 @@ namespace obj {
             TTF_CloseFont(font);
     }
     void GameOverObject::draw(SDL_Renderer *renderer) {               
-        score = 400; 
         if(score < 200) {
             SDL_RenderCopy(renderer, bg, nullptr, nullptr);
             util::printText(renderer, font, 25, 25, "Game Over Score: " + std::to_string(score) + " Clears: " + std::to_string(clears), {255,255,255,255});
