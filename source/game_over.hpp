@@ -16,7 +16,7 @@ namespace obj {
         virtual void load(SDL_Renderer *renderer) override;
     protected:
         int score = 0, clears = 0;
-        SDL_Texture *bg = nullptr;
+        SDL_Texture *bg = nullptr, *bg_score = nullptr;
         TTF_Font *font = nullptr;
         int cur_screen = 0;
 
