@@ -67,6 +67,12 @@ namespace puzzle {
         direction = 0;
     }
 
+    void Piece::setPosition(int x, int y) {
+        if(checkLocation(x, this->y)) {
+            this->x = x;
+        }
+    }
+
     void Piece::shiftColors() {
         Block b[3];
         b[0] = blocks[0];

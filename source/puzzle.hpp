@@ -9,6 +9,14 @@
 
 namespace obj {
 
+    enum SwipeDirection {
+        SWIPE_UP,
+        SWIPE_DOWN,
+        SWIPE_LEFT,
+        SWIPE_RIGHT,
+        SWIPE_NONE
+    };
+
     class PuzzleObject : public GameObject {
     public:
         PuzzleObject(int diff);
@@ -25,11 +33,27 @@ namespace obj {
         bool paused = false;
         int cur_level = 0;
         int cur_focus = 0;
+        SDL_Point swipeStartPos = {0, 0};
+        Uint32 swipeStartTime = 0;
+        const int SWIPE_DISTANCE_THRESHOLD = 50; 
+        const Uint32 SWIPE_TIME_THRESHOLD = 500; 
+        bool isTapPending = false;
+        Uint32 lastTapTime = 0;       
+        SDL_Point lastTapPos = {0, 0}; 
+        const Uint32 DOUBLE_TAP_THRESHOLD = 200; 
+        const int DOUBLE_TAP_DISTANCE = 50;    
         SDL_Texture *game_textures[4] = {nullptr};
         TTF_Font *font = nullptr;
         TTF_Font *paused_small, *paused_large;
         void twistColors();
         void procHat(int cur_focus, int value);
+        void moveBlockToPosition(SDL_Point position);
+        void detectSwipe(SDL_Point startPos, SDL_Point endPos, Uint32 startTime, Uint32 endTime);
+        bool isDropSwipe(SwipeDirection swipeDir);
+        bool isSwitchSwipe(SwipeDirection swipeDir);
+        void handleDoubleTap(SDL_Point p);
+        void handleSingleTap(SDL_Point tapPos);
+        
     };
 
 }

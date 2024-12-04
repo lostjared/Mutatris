@@ -245,171 +245,412 @@ namespace obj {
             }
     }
 
-    void PuzzleObject::event(SDL_Renderer *renderer, SDL_Event &e)  {
+    void PuzzleObject::event(SDL_Renderer *renderer, SDL_Event &e) {
+        static bool isDragging = false;
+        static SDL_Point lastMousePos = {0, 0};
+        static int screenWidth = 1280;
+        static int screenHeight = 720;
 
-
-        if(!paused) {
-            if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_p) {
+        if (!paused) {
+            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_p) {
                 paused = true;
                 return;
             }
         } else {
-            if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_SPACE)
+            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_SPACE) {
                 paused = false;
-            
+            }
             return;
         }
 
-        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_s) {
+        if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_s) {
             game.grid[cur_focus].game_piece.drop();
             return;
         }
 
-        if(e.type == SDL_JOYHATMOTION) {
-            if(cur_focus == 0) {
-                switch(e.jhat.value) {
-                    case 1:
-                        game.grid[cur_focus].game_piece.shiftColors(); 
-                    break;
-                    default:
-                    break;
-                }
-
-            } else if(cur_focus == 1) {
-                switch(e.jhat.value) {
-                    case 8:
-                        game.grid[cur_focus].game_piece.shiftColors(); 
-                    break;
-                    default:
-                    break;
-                }
-
-            } else if(cur_focus == 2) {
-                switch(e.jhat.value) {
-                    case 4:
-                        game.grid[cur_focus].game_piece.shiftColors();
-                    break;
-                    default:
-                    break;
-                }
-            } else if(cur_focus == 3) {
-                switch(e.jhat.value) {
-                    case 2:
-                        game.grid[cur_focus].game_piece.shiftColors();
-                    break;
-                    default:
-                    break;
-                }
-            }
-        }
-
-        switch(e.type) {
-            case SDL_JOYBUTTONDOWN:
-            switch(e.jbutton.button) {
-                case 0:
-                    game.grid[cur_focus].game_piece.shiftDirection();
-                break;
-                case 1:
-                    game.grid[cur_focus].game_piece.shiftColors(); 
-                break;
-                case 2:
-                    game.grid[cur_focus].game_piece.drop();
-                break;
-            }
-            break;
-          
-
-            case SDL_KEYDOWN: {
-                if(cur_focus == 0) {
-                    switch(e.key.keysym.sym) {
-                        case SDLK_LEFT:
-                            game.grid[cur_focus].game_piece.moveLeft();
-                        break;
-                        case SDLK_RIGHT:
-                            game.grid[cur_focus].game_piece.moveRight(); 
-                        break;
-                        case SDLK_UP:
-                            game.grid[cur_focus].game_piece.shiftColors(); 
-                        break;
-                        case SDLK_DOWN:
-                            game.grid[cur_focus].game_piece.moveDown();
-                        break;
-                        case SDLK_a:
-                        case SDLK_SPACE:
-                            game.grid[cur_focus].game_piece.shiftDirection();
-                        break;
-                        default:
-                        break;
-                    }
-                } else if(cur_focus == 1) {
-                    switch(e.key.keysym.sym) {
-                        case SDLK_DOWN:
-                            game.grid[cur_focus].game_piece.moveLeft();
-                        break;
-                        case SDLK_UP:
-                            game.grid[cur_focus].game_piece.moveRight();     
-                        break;
-                        case SDLK_LEFT:
-                            game.grid[cur_focus].game_piece.shiftColors(); 
-                        break;
-                        case SDLK_RIGHT:
-                            game.grid[cur_focus].game_piece.moveDown();
-                        break;
-                        case SDLK_a:
-                        case SDLK_SPACE:
-                            game.grid[cur_focus].game_piece.shiftDirection();
-                        break;
-                        default:
-                        break;
-                    }
-
-                } else if(cur_focus == 2) {
-                    switch(e.key.keysym.sym) {
-                        case SDLK_DOWN:
+        switch (e.type) {
+            case SDL_JOYHATMOTION:
+                if (cur_focus == 0) {
+                    switch (e.jhat.value) {
+                        case 1:
                             game.grid[cur_focus].game_piece.shiftColors();
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (cur_focus == 1) {
+                    switch (e.jhat.value) {
+                        case 8:
+                            game.grid[cur_focus].game_piece.shiftColors();
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (cur_focus == 2) {
+                    switch (e.jhat.value) {
+                        case 4:
+                            game.grid[cur_focus].game_piece.shiftColors();
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (cur_focus == 3) {
+                    switch (e.jhat.value) {
+                        case 2:
+                            game.grid[cur_focus].game_piece.shiftColors();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                break;
+
+            case SDL_JOYBUTTONDOWN:
+                switch (e.jbutton.button) {
+                    case 0:
+                        game.grid[cur_focus].game_piece.shiftDirection();
                         break;
-                        case SDLK_UP:
-                            game.grid[cur_focus].game_piece.moveDown();     
+                    case 1:
+                        game.grid[cur_focus].game_piece.shiftColors();
                         break;
+                    case 2:
+                        game.grid[cur_focus].game_piece.drop();
+                        break;
+                }
+                break;
+
+            case SDL_KEYDOWN:
+
+                if(e.key.keysym.sym == SDLK_w) {
+                    game.grid[cur_focus].game_piece.shiftColors();
+                    return;
+                }
+
+                if (cur_focus == 0) {
+                    switch (e.key.keysym.sym) {
                         case SDLK_LEFT:
-                            game.grid[cur_focus].game_piece.moveLeft(); 
-                        break;
+                            game.grid[cur_focus].game_piece.moveLeft();
+                            break;
                         case SDLK_RIGHT:
                             game.grid[cur_focus].game_piece.moveRight();
-                        break;
+                            break;
+                        case SDLK_UP:
+                            game.grid[cur_focus].game_piece.shiftColors();
+                            break;
+                        case SDLK_DOWN:
+                            game.grid[cur_focus].game_piece.moveDown();
+                            break;
                         case SDLK_a:
                         case SDLK_SPACE:
                             game.grid[cur_focus].game_piece.shiftDirection();
-                        break;
+                            break;
                         default:
-                        break;
+                            break;
                     }
-                } else if(cur_focus == 3) {
-                    switch(e.key.keysym.sym) {
+                } else if (cur_focus == 1) {
+                    switch (e.key.keysym.sym) {
                         case SDLK_DOWN:
                             game.grid[cur_focus].game_piece.moveLeft();
-                        break;
+                            break;
                         case SDLK_UP:
-                            game.grid[cur_focus].game_piece.moveRight();     
-                        break;
+                            game.grid[cur_focus].game_piece.moveRight();
+                            break;
                         case SDLK_LEFT:
-                            game.grid[cur_focus].game_piece.moveDown(); 
-                        break;
-                        case SDLK_RIGHT:
                             game.grid[cur_focus].game_piece.shiftColors();
-                        break;
+                            break;
+                        case SDLK_RIGHT:
+                            game.grid[cur_focus].game_piece.moveDown();
+                            break;
                         case SDLK_a:
                         case SDLK_SPACE:
                             game.grid[cur_focus].game_piece.shiftDirection();
-                        break;
+                            break;
                         default:
-                        break;
+                            break;
+                    }
+                } else if (cur_focus == 2) {
+                    switch (e.key.keysym.sym) {
+                        case SDLK_DOWN:
+                            game.grid[cur_focus].game_piece.shiftColors();
+                            break;
+                        case SDLK_UP:
+                            game.grid[cur_focus].game_piece.moveDown();
+                            break;
+                        case SDLK_LEFT:
+                            game.grid[cur_focus].game_piece.moveLeft();
+                            break;
+                        case SDLK_RIGHT:
+                            game.grid[cur_focus].game_piece.moveRight();
+                            break;
+                        case SDLK_a:
+                        case SDLK_SPACE:
+                            game.grid[cur_focus].game_piece.shiftDirection();
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (cur_focus == 3) {
+                    switch (e.key.keysym.sym) {
+                        case SDLK_DOWN:
+                            game.grid[cur_focus].game_piece.moveLeft();
+                            break;
+                        case SDLK_UP:
+                            game.grid[cur_focus].game_piece.moveRight();
+                            break;
+                        case SDLK_LEFT:
+                            game.grid[cur_focus].game_piece.moveDown();
+                            break;
+                        case SDLK_RIGHT:
+                            game.grid[cur_focus].game_piece.shiftColors();
+                            break;
+                        case SDLK_a:
+                        case SDLK_SPACE:
+                            game.grid[cur_focus].game_piece.shiftDirection();
+                            break;
+                        default:
+                            break;
                     }
                 }
+                break;
+            case SDL_MOUSEBUTTONDOWN: {
+                if (e.button.button == SDL_BUTTON_LEFT) {
+                    isDragging = true;
+                    Uint32 currentTime = SDL_GetTicks();
+                    int x = e.button.x;
+                    int y = e.button.y;
+                    if (currentTime - lastTapTime > DOUBLE_TAP_THRESHOLD) {
+                        lastTapTime = 0;
+                    }
+                    if (currentTime - lastTapTime <= DOUBLE_TAP_THRESHOLD &&
+                        abs(x - lastTapPos.x) <= DOUBLE_TAP_DISTANCE &&
+                        abs(y - lastTapPos.y) <= DOUBLE_TAP_DISTANCE) {
+                        handleDoubleTap({x, y});
+                        lastTapTime = 0;
+                    } else {
+                        lastTapTime = currentTime;
+                        lastTapPos = {x, y};
+                    }
+
+                    lastMousePos = { e.button.x, e.button.y };
+                    swipeStartPos = lastMousePos;
+                    swipeStartTime = SDL_GetTicks();
+                    moveBlockToPosition(lastMousePos);
+                }
+                break;
+            }
+
+            case SDL_MOUSEBUTTONUP: {
+                if (e.button.button == SDL_BUTTON_LEFT) {
+                    isDragging = false;
+                    SDL_Point mouseEndPos = { e.button.x, e.button.y };
+                    Uint32 swipeEndTime = SDL_GetTicks();
+                    detectSwipe(swipeStartPos, mouseEndPos, swipeStartTime, swipeEndTime);
+                }
+                break;
+            }
+
+            case SDL_MOUSEMOTION: {
+                if (isDragging) {
+                    SDL_Point currentMousePos = { e.motion.x, e.motion.y };
+                    moveBlockToPosition(currentMousePos);
+                    lastMousePos = currentMousePos;
+                }
+                break;
+            }
+            case SDL_FINGERDOWN: {
+                int x = static_cast<int>(e.tfinger.x * screenWidth);
+                int y = static_cast<int>(e.tfinger.y * screenHeight);
+                Uint32 currentTime = SDL_GetTicks();
+
+                if (isTapPending) {
+                    if (currentTime - lastTapTime <= DOUBLE_TAP_THRESHOLD &&
+                        abs(x - lastTapPos.x) <= DOUBLE_TAP_DISTANCE &&
+                        abs(y - lastTapPos.y) <= DOUBLE_TAP_DISTANCE) {
+                        handleDoubleTap({x, y});
+                        isTapPending = false;
+                        lastTapTime = 0;
+                    } else {
+                        handleSingleTap({lastTapPos.x, lastTapPos.y});
+                        isTapPending = false;
+                        lastTapTime = currentTime;
+                        lastTapPos = {x, y};
+                    }
+                } else {
+                    isTapPending = true;
+                    lastTapTime = currentTime;
+                    lastTapPos = {x, y};
+                    SDL_AddTimer(DOUBLE_TAP_THRESHOLD, [](Uint32 interval, void* param) -> Uint32 {
+                        PuzzleObject* self = static_cast<PuzzleObject*>(param);
+                        if (self->isTapPending) {
+                            self->handleSingleTap(self->lastTapPos);
+                            self->isTapPending = false;
+                        }
+                        return 0; 
+                    }, this);
+                }
+                break;
+            }
+            case SDL_FINGERUP: {
+                if (isDragging) {
+                    isDragging = false;
+                    int x = static_cast<int>(e.tfinger.x * screenWidth);
+                    int y = static_cast<int>(e.tfinger.y * screenHeight);
+                    SDL_Point touchEndPos = { x, y };
+                    Uint32 swipeEndTime = SDL_GetTicks();
+                    detectSwipe(swipeStartPos, touchEndPos, swipeStartTime, swipeEndTime);
+                }
+            }
+                break;
+
+            case SDL_FINGERMOTION: {
+                isDragging = true;
+                int x = static_cast<int>(e.tfinger.x * screenWidth);
+                int y = static_cast<int>(e.tfinger.y * screenHeight);
+                lastMousePos = { x, y };
+                moveBlockToPosition(lastMousePos);
             }
             break;
+
+            default:
+                break;
         }
     }
+
+    void PuzzleObject::detectSwipe(SDL_Point startPos, SDL_Point endPos, Uint32 startTime, Uint32 endTime) {
+        int deltaX = endPos.x - startPos.x;
+        int deltaY = endPos.y - startPos.y;
+        Uint32 deltaTime = endTime - startTime;
+ 
+        if (deltaTime > SWIPE_TIME_THRESHOLD) {
+            return;
+        }
+
+        if (abs(deltaX) < SWIPE_DISTANCE_THRESHOLD && abs(deltaY) < SWIPE_DISTANCE_THRESHOLD) {
+            return;
+        }
+
+        SwipeDirection swipeDir = SWIPE_NONE;
+        if (abs(deltaX) > abs(deltaY)) {
+            swipeDir = (deltaX > 0) ? SWIPE_RIGHT : SWIPE_LEFT;
+        } else {
+            swipeDir = (deltaY > 0) ? SWIPE_DOWN : SWIPE_UP;
+        }
+        if (isDropSwipe(swipeDir)) {
+            game.grid[cur_focus].game_piece.drop();
+        }
+        if(isSwitchSwipe(swipeDir)) {
+            game.grid[cur_focus].game_piece.shiftColors();
+        }
+    }
+
+    void PuzzleObject::handleDoubleTap(SDL_Point p) {
+        game.grid[cur_focus].game_piece.shiftDirection();
+    }
+
+    bool PuzzleObject::isDropSwipe(SwipeDirection swipeDir) {
+        switch (cur_focus) {
+            case 0: 
+                return swipeDir == SWIPE_DOWN;
+            case 1: 
+                return swipeDir == SWIPE_RIGHT;
+            case 2: 
+                return swipeDir == SWIPE_UP;
+            case 3: 
+                return swipeDir == SWIPE_LEFT;
+            default:
+                return false;
+        }
+    }
+
+    void PuzzleObject::handleSingleTap(SDL_Point tapPos) {
+    }
+
+    bool PuzzleObject::isSwitchSwipe(SwipeDirection swipeDir) {
+        switch (cur_focus) {
+            case 0: 
+                return swipeDir == SWIPE_UP;
+            case 1: 
+                return swipeDir == SWIPE_LEFT;
+            case 2: 
+                return swipeDir == SWIPE_DOWN;
+            case 3: 
+                return swipeDir == SWIPE_RIGHT;
+            default:
+                return false;
+        }
+    }
+
+
+    void PuzzleObject::moveBlockToPosition(SDL_Point position) {
+        const int cellWidth = 32;    
+        const int cellHeight = 16;   
+        int gridOffsetX = 0;         
+        int gridOffsetY = 0;         
+        switch(cur_focus) {
+            case 0: { 
+                int gridWidth = game.grid[0].width();
+                gridOffsetX = (1280 / 2) - ((gridWidth * cellWidth) / 2);
+                gridOffsetY = 0;
+                break;
+            }
+            case 1: { 
+                int gridWidth = game.grid[1].width();
+                gridOffsetX = 32;
+                gridOffsetY = (720 / 2) - ((gridWidth * cellHeight) / 2); 
+                break;
+            }
+            case 2: { 
+                int gridWidth = game.grid[2].width();
+                gridOffsetX = (1280 / 2) - ((gridWidth * cellWidth) / 2);
+                gridOffsetY = (720 / 2) + 5;
+                break;
+            }
+            case 3: { 
+                int gridWidth = game.grid[3].width();
+                gridOffsetX = 1280 - (gridWidth * cellWidth) - 32;
+                gridOffsetY = (720 / 2) - ((gridWidth * cellHeight) / 2); 
+                break;
+            }
+            default:
+                return; 
+        }
+
+        int gridX = 0;
+        int gridY = 0;
+        switch(cur_focus) {
+            case 0: { 
+                gridX = (position.x - gridOffsetX) / cellWidth;
+                gridY = (position.y - gridOffsetY) / cellHeight;
+                break;
+            }
+            case 1: { 
+                gridX = (position.y - gridOffsetY) / cellHeight;
+                gridY = (position.x - gridOffsetX) / cellWidth;
+                gridY = game.grid[1].width() - 1 - gridY;
+                break;
+            }
+            case 2: { 
+                gridX = (position.x - gridOffsetX) / cellWidth;
+                gridY = (position.y - gridOffsetY) / cellHeight;
+                gridY = game.grid[2].height() - 1 - gridY;
+                break;
+            }
+            case 3: { 
+                gridX = (position.y - gridOffsetY) / cellHeight;
+                gridY = (position.x - gridOffsetX) / cellWidth;
+                gridY = game.grid[3].width() - 1 - gridY;
+                break;
+            }
+        }
+        gridX = std::max(0, std::min(gridX, game.grid[cur_focus].width() - 1));
+        gridY = std::max(0, std::min(gridY, game.grid[cur_focus].height() - 1));
+        if(cur_focus == 1 || cur_focus == 3 )
+            game.grid[cur_focus].game_piece.setPosition(game.grid[1].width()-gridX-1, gridY);
+        else
+            game.grid[cur_focus].game_piece.setPosition(gridX, gridY);
+
+    }
+
 
     void PuzzleObject::load(SDL_Renderer *renderer) {
         std::cout << "Mutatris: Game Init...\n";

@@ -37,6 +37,56 @@ namespace obj {
     }
 
     void IntroObject::event(SDL_Renderer *renderer, SDL_Event &e) {
+        if(cur_screen == 0 && (e.type == SDL_FINGERDOWN || e.type == SDL_MOUSEBUTTONDOWN)) {
+            cur_screen = 1;
+            return;
+        } else if(cur_screen == 1 && e.type == SDL_MOUSEBUTTONDOWN) {
+            obj::setObject(new PuzzleObject(cursor_pos));
+            obj::object->load(renderer);
+            return;
+        }
+        SDL_Rect easyRect = {420, 475, 80, 36}; 
+        SDL_Rect mediumRect = {580, 475, 120, 36}; 
+        SDL_Rect hardRect = {800, 475, 80, 36};   
+        if (cur_screen == 1 && e.type == SDL_MOUSEMOTION) {
+            int cx = e.motion.x;
+            int cy = e.motion.y;
+            SDL_Point pos = { cx, cy };
+            if (SDL_PointInRect(&pos, &easyRect)) {
+                cursor_pos = 0;
+            } 
+            else if (SDL_PointInRect(&pos, &mediumRect)) {
+                cursor_pos = 1;
+            } 
+            else if (SDL_PointInRect(&pos, &hardRect)) {
+                cursor_pos = 2;
+            } 
+        }
+
+        if (cur_screen == 1 && e.type == SDL_FINGERDOWN) {
+                int cx = static_cast<int>(e.tfinger.x * 1280);
+                int cy = static_cast<int>(e.tfinger.y * 720); 
+
+                SDL_Point pos = { cx, cy };
+
+                if (SDL_PointInRect(&pos, &easyRect)) {
+                    cursor_pos = 0;
+                } 
+                else if (SDL_PointInRect(&pos, &mediumRect)) {
+                    cursor_pos = 1;
+                } 
+                else if (SDL_PointInRect(&pos, &hardRect)) {
+                    cursor_pos = 2;
+                } 
+                else {
+                    cursor_pos = -1; 
+                }
+                if(cursor_pos != -1) {
+                        obj::setObject(new PuzzleObject(cursor_pos));
+                        obj::object->load(renderer);
+                        return;
+                }
+            }
 
         if(cur_screen == 0  && e.type == SDL_JOYBUTTONDOWN) {
             switch(e.jbutton.button) {
@@ -67,7 +117,7 @@ namespace obj {
                 case 0:
                 obj::setObject(new PuzzleObject(cursor_pos));
                 obj::object->load(renderer);
-                break;
+                return;
             }
         }
 

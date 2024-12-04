@@ -37,9 +37,15 @@ namespace obj {
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_SPACE) {
             obj::setObject(new obj::IntroObject());
             obj::object->load(renderer);
+            return;
         } else if(e.type == SDL_JOYBUTTONDOWN && e.jbutton.button == 0) {
             obj::setObject(new obj::IntroObject());
             obj::object->load(renderer);
+            return;
+        } else if((e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_FINGERDOWN)) {
+            obj::setObject(new obj::IntroObject());
+            obj::object->load(renderer);
+            return;
         }
     }
         

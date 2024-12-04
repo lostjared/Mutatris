@@ -45,6 +45,7 @@ namespace puzzle {
 		void shiftDirection();
 		void setBlock();
 		void drop();
+		void setPosition(int x, int y);
 	private:
 		Block blocks[3];
 		int x = 0,y = 0;
