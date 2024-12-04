@@ -12,6 +12,10 @@ Welcome to **Mutatris**, a dynamic and fast-paced puzzle game where quick thinki
 ## How to Play
 
 ### Controls
+
+* Gamepads are supported.
+* Mouse/Touch controls supported.
+
 - **Movement**: Control block positioning with directional inputs based on your current orientation.
   - **Move Left/Right**: Shift the active block horizontally with the left and right arrow keys.
   - **Move Down**: Press the down arrow to move the active block down.
