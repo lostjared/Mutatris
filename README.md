@@ -11,19 +11,6 @@ Welcome to **Mutatris**, a dynamic and fast-paced puzzle game where quick thinki
 
 ## How to Play
 
-### Controls
-
-* Gamepads are supported.
-* Mouse/Touch controls supported.
-
-- **Movement**: Control block positioning with directional inputs based on your current orientation.
-  - **Move Left/Right**: Shift the active block horizontally with the left and right arrow keys.
-  - **Move Down**: Press the down arrow to move the active block down.
-  - **Instant Drop**: Send the active block directly to the bottom by pressing the **S** key.
-  - **Rotate Block**: Change the block’s orientation with the **A** or **Space** key.
-  - **Shift Colors**: Adjust colors within the block by pressing the arrow key opposite to your direction (e.g., press **Up** if moving in Direction 0).
-  - **Pause Game**: Press the P key to pause the game, and space to resume.
-
 ### Objective
 Align groups of 3 or 4 blocks of the same color in any direction—horizontal, vertical, or diagonal—to clear them from the grid. Aim for combos of 4 blocks or more for bonus points and strategic advantage.
 
@@ -47,5 +34,34 @@ The game ends when blocks reach the top of any grid, blocking further movement. 
 - **Score Tracking**: Try to get the highest score by clearing rows and triggering combos.
 - **Randomized Blocks**: The blocks come in different colors and are randomized to keep each game fresh.
 
+### Controls
+
+* Gamepads are supported.
+
+## Touch Controls
+
+The touch input system is tailored for devices with touchscreens, such as smartphones and tablets. It includes gestures for single-tap, double-tap, and swiping, each mapped to specific in-game actions.
+
+* Double Tap:
+Quickly tapping the screen twice performs a special action, it shifts the position of the blocks.
+
+* Drag and Drop:
+Press and hold anywhere on the screen to initiate a drag action. While holding, move your finger to reposition the active game piece in real-time.
+
+* Swipe Gestures:
+Swiping in specific directions moves the active game piece:
+
+- **Up Swipe**: Shifts the colors of the blocks to fit them together.
+- **Down Swipe**: Instantly drops the piece.
+
+## Keyboard Controls
+
+- **Keyboard Movement**: Control block positioning with directional inputs based on your current orientation.
+  - **Move Left/Right**: Shift the active block horizontally with the left and right arrow keys.
+  - **Move Down**: Press the down arrow to move the active block down.
+  - **Instant Drop**: Send the active block directly to the bottom by pressing the **S** key.
+  - **Rotate Block**: Change the block’s orientation with the **A** or **Space** key.
+  - **Shift Colors**: Adjust colors within the block by pressing the arrow key opposite to your direction (e.g., press **Up** if moving in Direction 0).
+  - **Pause Game**: Press the P key to pause the game, and space to resume.
 
 Get ready to challenge yourself with **Mutatris**’s thrilling pace and engaging mechanics—how high can you score?
