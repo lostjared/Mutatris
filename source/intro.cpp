@@ -37,6 +37,9 @@ namespace obj {
     }
 
     void IntroObject::event(SDL_Renderer *renderer, SDL_Event &e) {
+
+        util::connectJoystick(e);
+
         if(cur_screen == 0 && (e.type == SDL_FINGERDOWN || e.type == SDL_MOUSEBUTTONDOWN)) {
             cur_screen = 1;
             return;
@@ -88,9 +91,9 @@ namespace obj {
                 }
             }
 
-        if(cur_screen == 0  && e.type == SDL_JOYBUTTONDOWN) {
-            switch(e.jbutton.button) {
-                case 7:
+        if(cur_screen == 0  && e.type == SDL_CONTROLLERBUTTONDOWN) {
+            switch(e.cbutton.button) {
+                case SDL_CONTROLLER_BUTTON_A:
                     cur_screen = 1;
                 break;
             }
@@ -112,9 +115,9 @@ namespace obj {
             return;
         }
 
-        if(cur_screen == 1 && e.type == SDL_JOYBUTTONDOWN) {
-            switch(e.jbutton.button) {
-                case 0:
+        if(cur_screen == 1 && e.type == SDL_CONTROLLERBUTTONDOWN) {
+            switch(e.cbutton.button) {
+                case SDL_CONTROLLER_BUTTON_A:
                 obj::setObject(new PuzzleObject(cursor_pos));
                 obj::object->load(renderer);
                 return;
@@ -122,8 +125,6 @@ namespace obj {
         }
 
         if(cur_screen == 1 && e.type == SDL_KEYDOWN) {
-
-
             switch(e.key.keysym.sym) {
                 case SDLK_LEFT:
                 if(cursor_pos > 0) cursor_pos--;

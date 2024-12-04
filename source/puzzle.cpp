@@ -167,19 +167,128 @@ namespace obj {
             } else {
                 obj::setObject(new obj::GameOverObject(game.score, game.clears));
                 obj::object->load(renderer);
+                return;
             }
         }
 
-        if(!util::stick.empty()) {
-            static Uint32 previous_time = SDL_GetTicks();
-            Uint32 current_time = SDL_GetTicks();
-            if (current_time - previous_time >= 100) {
-                for(size_t i =  0; i < util::stick.size(); ++i) {
-                    int btn = SDL_JoystickGetHat(util::stick[i], 0);
-                    procHat(cur_focus, btn);   
+        for(auto &c : util::stick) {
+            handleControllerButtonRepeat(c, cur_focus, current_time);
+        }
+    }
+
+    void PuzzleObject::handleControllerButtonRepeat(SDL_GameController *controller, int cur_focus, Uint32 current_time) {
+        for (auto &entry : button_states) {
+            SDL_GameControllerButton button = entry.first;
+            ButtonState &state = entry.second;
+
+            if (state.is_pressed) {
+                if (current_time - state.last_repeat_time >= REPEAT_INTERVAL) {
+                    procDPad(cur_focus, button);
+                    state.last_repeat_time = current_time;
                 }
-                previous_time = current_time;
             }
+        }
+    }
+
+    void PuzzleObject::procStick(int cur_focus, int x_axis, int y_axis) {
+        const int DEADZONE = 8000;
+        if (cur_focus == 0) {
+            if (x_axis < -DEADZONE) {
+                game.grid[cur_focus].game_piece.moveLeft();
+            } else if (x_axis > DEADZONE) {
+                game.grid[cur_focus].game_piece.moveRight();
+            }
+            if (y_axis > DEADZONE) {
+                game.grid[cur_focus].game_piece.moveDown();
+            }
+        } else if (cur_focus == 1) {
+            if (y_axis > DEADZONE) {
+                game.grid[cur_focus].game_piece.moveLeft();
+            } else if (y_axis < -DEADZONE) {
+                game.grid[cur_focus].game_piece.moveRight();
+            }
+            if (x_axis > DEADZONE) {
+                game.grid[cur_focus].game_piece.moveDown();
+            }
+        } else if (cur_focus == 2) {
+            if (x_axis > DEADZONE) {
+                game.grid[cur_focus].game_piece.moveRight();
+            } else if (x_axis < -DEADZONE) {
+                game.grid[cur_focus].game_piece.moveLeft();
+            }
+
+            if (y_axis < -DEADZONE) {
+                game.grid[cur_focus].game_piece.moveDown();
+            }
+        } else if (cur_focus == 3) {
+            if (y_axis > DEADZONE) {
+                game.grid[cur_focus].game_piece.moveLeft();
+            } else if (y_axis < -DEADZONE) {
+                game.grid[cur_focus].game_piece.moveRight();
+            }
+
+            if (x_axis < -DEADZONE) {
+                game.grid[cur_focus].game_piece.moveDown();
+            }
+        }
+    }
+
+    void PuzzleObject::procDPad(int cur_focus, int button) {
+        switch (cur_focus) {
+            case 0:
+                if (button == SDL_CONTROLLER_BUTTON_DPAD_LEFT) {
+                    game.grid[cur_focus].game_piece.moveLeft();
+                } else if (button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT) {
+                    game.grid[cur_focus].game_piece.moveRight();
+                }
+                if (button == SDL_CONTROLLER_BUTTON_DPAD_DOWN) {
+                    game.grid[cur_focus].game_piece.moveDown();
+                }
+                break;
+            case 1:
+                if (button == SDL_CONTROLLER_BUTTON_DPAD_DOWN) {
+                    game.grid[cur_focus].game_piece.moveLeft();
+                } else if (button == SDL_CONTROLLER_BUTTON_DPAD_UP) {
+                    game.grid[cur_focus].game_piece.moveRight();
+                }
+                if (button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT) {
+                    game.grid[cur_focus].game_piece.moveDown();
+                }
+                break;
+            case 2:
+                if (button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT) {
+                    game.grid[cur_focus].game_piece.moveRight();
+                } else if (button == SDL_CONTROLLER_BUTTON_DPAD_LEFT) {
+                    game.grid[cur_focus].game_piece.moveLeft();
+                }
+                if (button == SDL_CONTROLLER_BUTTON_DPAD_UP) {
+                    game.grid[cur_focus].game_piece.moveDown();
+                }
+                break;
+            case 3:
+                if (button == SDL_CONTROLLER_BUTTON_DPAD_DOWN) {
+                    game.grid[cur_focus].game_piece.moveLeft();
+                } else if (button == SDL_CONTROLLER_BUTTON_DPAD_UP) {
+                    game.grid[cur_focus].game_piece.moveRight();
+                }
+                if (button == SDL_CONTROLLER_BUTTON_DPAD_LEFT) {
+                    game.grid[cur_focus].game_piece.moveDown();
+                }
+                break;
+            default:
+                break;
+        }
+
+        switch(button) {
+            case SDL_CONTROLLER_BUTTON_A:
+            game.grid[cur_focus].game_piece.shiftColors();
+            break;
+            case SDL_CONTROLLER_BUTTON_B:
+            game.grid[cur_focus].game_piece.shiftDirection();
+            break;
+            case SDL_CONTROLLER_BUTTON_Y:
+            game.grid[cur_focus].game_piece.drop();
+            break;
         }
     }
 
@@ -246,6 +355,9 @@ namespace obj {
     }
 
     void PuzzleObject::event(SDL_Renderer *renderer, SDL_Event &e) {
+
+        util::connectJoystick(e);
+
         static bool isDragging = false;
         static SDL_Point lastMousePos = {0, 0};
         static int screenWidth = 1280;
@@ -268,149 +380,110 @@ namespace obj {
             return;
         }
 
+        Uint32 current_time = SDL_GetTicks();
+
         switch (e.type) {
-            case SDL_JOYHATMOTION:
-                if (cur_focus == 0) {
-                    switch (e.jhat.value) {
-                        case 1:
-                            game.grid[cur_focus].game_piece.shiftColors();
-                            break;
-                        default:
-                            break;
-                    }
-                } else if (cur_focus == 1) {
-                    switch (e.jhat.value) {
-                        case 8:
-                            game.grid[cur_focus].game_piece.shiftColors();
-                            break;
-                        default:
-                            break;
-                    }
-                } else if (cur_focus == 2) {
-                    switch (e.jhat.value) {
-                        case 4:
-                            game.grid[cur_focus].game_piece.shiftColors();
-                            break;
-                        default:
-                            break;
-                    }
-                } else if (cur_focus == 3) {
-                    switch (e.jhat.value) {
-                        case 2:
-                            game.grid[cur_focus].game_piece.shiftColors();
-                            break;
-                        default:
-                            break;
-                    }
-                }
+            case SDL_CONTROLLERBUTTONDOWN: {
+                SDL_GameControllerButton button = static_cast<SDL_GameControllerButton>(e.cbutton.button);
+                button_states[button] = { true, current_time + REPEAT_DELAY };
                 break;
-
-            case SDL_JOYBUTTONDOWN:
-                switch (e.jbutton.button) {
-                    case 0:
-                        game.grid[cur_focus].game_piece.shiftDirection();
-                        break;
-                    case 1:
+            }
+            case SDL_CONTROLLERBUTTONUP: {
+                SDL_GameControllerButton button = static_cast<SDL_GameControllerButton>(e.cbutton.button);
+                button_states[button].is_pressed = false;
+                break;
+            }
+                case SDL_KEYDOWN:
+                    if(e.key.keysym.sym == SDLK_w) {
                         game.grid[cur_focus].game_piece.shiftColors();
-                        break;
-                    case 2:
-                        game.grid[cur_focus].game_piece.drop();
-                        break;
-                }
-                break;
+                        return;
+                    }
 
-            case SDL_KEYDOWN:
-
-                if(e.key.keysym.sym == SDLK_w) {
-                    game.grid[cur_focus].game_piece.shiftColors();
-                    return;
-                }
-
-                if (cur_focus == 0) {
-                    switch (e.key.keysym.sym) {
-                        case SDLK_LEFT:
-                            game.grid[cur_focus].game_piece.moveLeft();
-                            break;
-                        case SDLK_RIGHT:
-                            game.grid[cur_focus].game_piece.moveRight();
-                            break;
-                        case SDLK_UP:
-                            game.grid[cur_focus].game_piece.shiftColors();
-                            break;
-                        case SDLK_DOWN:
-                            game.grid[cur_focus].game_piece.moveDown();
-                            break;
-                        case SDLK_a:
-                        case SDLK_SPACE:
-                            game.grid[cur_focus].game_piece.shiftDirection();
-                            break;
-                        default:
-                            break;
+                    if (cur_focus == 0) {
+                        switch (e.key.keysym.sym) {
+                            case SDLK_LEFT:
+                                game.grid[cur_focus].game_piece.moveLeft();
+                                break;
+                            case SDLK_RIGHT:
+                                game.grid[cur_focus].game_piece.moveRight();
+                                break;
+                            case SDLK_UP:
+                                game.grid[cur_focus].game_piece.shiftColors();
+                                break;
+                            case SDLK_DOWN:
+                                game.grid[cur_focus].game_piece.moveDown();
+                                break;
+                            case SDLK_a:
+                            case SDLK_SPACE:
+                                game.grid[cur_focus].game_piece.shiftDirection();
+                                break;
+                            default:
+                                break;
+                        }
+                    } else if (cur_focus == 1) {
+                        switch (e.key.keysym.sym) {
+                            case SDLK_DOWN:
+                                game.grid[cur_focus].game_piece.moveLeft();
+                                break;
+                            case SDLK_UP:
+                                game.grid[cur_focus].game_piece.moveRight();
+                                break;
+                            case SDLK_LEFT:
+                                game.grid[cur_focus].game_piece.shiftColors();
+                                break;
+                            case SDLK_RIGHT:
+                                game.grid[cur_focus].game_piece.moveDown();
+                                break;
+                            case SDLK_a:
+                            case SDLK_SPACE:
+                                game.grid[cur_focus].game_piece.shiftDirection();
+                                break;
+                            default:
+                                break;
+                        }
+                    } else if (cur_focus == 2) {
+                        switch (e.key.keysym.sym) {
+                            case SDLK_DOWN:
+                                game.grid[cur_focus].game_piece.shiftColors();
+                                break;
+                            case SDLK_UP:
+                                game.grid[cur_focus].game_piece.moveDown();
+                                break;
+                            case SDLK_LEFT:
+                                game.grid[cur_focus].game_piece.moveLeft();
+                                break;
+                            case SDLK_RIGHT:
+                                game.grid[cur_focus].game_piece.moveRight();
+                                break;
+                            case SDLK_a:
+                            case SDLK_SPACE:
+                                game.grid[cur_focus].game_piece.shiftDirection();
+                                break;
+                            default:
+                                break;
+                        }
+                    } else if (cur_focus == 3) {
+                        switch (e.key.keysym.sym) {
+                            case SDLK_DOWN:
+                                game.grid[cur_focus].game_piece.moveLeft();
+                                break;
+                            case SDLK_UP:
+                                game.grid[cur_focus].game_piece.moveRight();
+                                break;
+                            case SDLK_LEFT:
+                                game.grid[cur_focus].game_piece.moveDown();
+                                break;
+                            case SDLK_RIGHT:
+                                game.grid[cur_focus].game_piece.shiftColors();
+                                break;
+                            case SDLK_a:
+                            case SDLK_SPACE:
+                                game.grid[cur_focus].game_piece.shiftDirection();
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                } else if (cur_focus == 1) {
-                    switch (e.key.keysym.sym) {
-                        case SDLK_DOWN:
-                            game.grid[cur_focus].game_piece.moveLeft();
-                            break;
-                        case SDLK_UP:
-                            game.grid[cur_focus].game_piece.moveRight();
-                            break;
-                        case SDLK_LEFT:
-                            game.grid[cur_focus].game_piece.shiftColors();
-                            break;
-                        case SDLK_RIGHT:
-                            game.grid[cur_focus].game_piece.moveDown();
-                            break;
-                        case SDLK_a:
-                        case SDLK_SPACE:
-                            game.grid[cur_focus].game_piece.shiftDirection();
-                            break;
-                        default:
-                            break;
-                    }
-                } else if (cur_focus == 2) {
-                    switch (e.key.keysym.sym) {
-                        case SDLK_DOWN:
-                            game.grid[cur_focus].game_piece.shiftColors();
-                            break;
-                        case SDLK_UP:
-                            game.grid[cur_focus].game_piece.moveDown();
-                            break;
-                        case SDLK_LEFT:
-                            game.grid[cur_focus].game_piece.moveLeft();
-                            break;
-                        case SDLK_RIGHT:
-                            game.grid[cur_focus].game_piece.moveRight();
-                            break;
-                        case SDLK_a:
-                        case SDLK_SPACE:
-                            game.grid[cur_focus].game_piece.shiftDirection();
-                            break;
-                        default:
-                            break;
-                    }
-                } else if (cur_focus == 3) {
-                    switch (e.key.keysym.sym) {
-                        case SDLK_DOWN:
-                            game.grid[cur_focus].game_piece.moveLeft();
-                            break;
-                        case SDLK_UP:
-                            game.grid[cur_focus].game_piece.moveRight();
-                            break;
-                        case SDLK_LEFT:
-                            game.grid[cur_focus].game_piece.moveDown();
-                            break;
-                        case SDLK_RIGHT:
-                            game.grid[cur_focus].game_piece.shiftColors();
-                            break;
-                        case SDLK_a:
-                        case SDLK_SPACE:
-                            game.grid[cur_focus].game_piece.shiftDirection();
-                            break;
-                        default:
-                            break;
-                    }
-                }
                 break;
             case SDL_MOUSEBUTTONDOWN: {
                 if (e.button.button == SDL_BUTTON_LEFT) {

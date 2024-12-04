@@ -47,13 +47,22 @@ namespace obj {
         TTF_Font *paused_small, *paused_large;
         void twistColors();
         void procHat(int cur_focus, int value);
+        void procStick(int cur_focus, int axis_x, int axis_y);
+        void procDPad(int cur_focus, int button);
         void moveBlockToPosition(SDL_Point position);
         void detectSwipe(SDL_Point startPos, SDL_Point endPos, Uint32 startTime, Uint32 endTime);
         bool isDropSwipe(SwipeDirection swipeDir);
         bool isSwitchSwipe(SwipeDirection swipeDir);
         void handleDoubleTap(SDL_Point p);
         void handleSingleTap(SDL_Point tapPos);
-        
+        void handleControllerButtonRepeat(SDL_GameController *controller, int cur_focus, Uint32 current_time);
+        const Uint32 REPEAT_DELAY = 300;   
+        const Uint32 REPEAT_INTERVAL = 150; 
+        struct ButtonState {
+            bool is_pressed;
+            Uint32 last_repeat_time;
+        };
+        std::unordered_map<SDL_GameControllerButton, ButtonState> button_states;
     };
 
 }

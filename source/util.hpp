@@ -10,8 +10,7 @@
 
 namespace util  {
     extern std::string path;
-    extern std::vector<SDL_Joystick *> stick;
-
+    extern std::vector<SDL_GameController *> stick;
     std::string getFilePath(const std::string &filename);
     void printText(SDL_Renderer *renderer,TTF_Font *font, int x, int y, const std::string &text, SDL_Color col);
     SDL_Texture *loadTexture(SDL_Renderer *renderer, const std::string &filename);
@@ -20,6 +19,7 @@ namespace util  {
     TTF_Font *loadFont(const std::string &filename, int size);
     void initJoystick();
     void closeJoystick();
+    void connectJoystick(SDL_Event &e);
 }
 
 #endif

@@ -3,7 +3,7 @@
 
 namespace util {
 
-    std::vector<SDL_Joystick *> stick;
+    std::vector<SDL_GameController *> stick;
 
     #ifdef FOR_WASM
     std::string path = "/assets";
@@ -80,20 +80,37 @@ namespace util {
     void initJoystick() {
 
         for(int i = 0; i < SDL_NumJoysticks(); ++i) {
-            SDL_Joystick *stick_ = SDL_JoystickOpen(i);
+            SDL_GameController *stick_ = SDL_GameControllerOpen(i);
             if(!stick_) {
-                std::cout << "Mutatris: Joystick disabled..\n";
+                std::cout << "Mutatris: Game Controller disabled..\n";
             } else {
-                std::cout << "Mutatris: Joystick: " << SDL_JoystickName(stick_) << " enabled...\n";
+                std::cout << "Mutatris: Game Controller: " << SDL_GameControllerName(stick_) << " enabled...\n";
             }
             stick.push_back(stick_);
         }
-        SDL_JoystickEventState(SDL_ENABLE);
+        SDL_GameControllerEventState(SDL_ENABLE);
     }
 
     void closeJoystick() {
-        for(int i = 0; i < SDL_NumJoysticks(); ++i) {
-            SDL_JoystickClose(stick[i]);
+        for(size_t i = 0; i < stick.size(); ++i) {
+            SDL_GameControllerClose(stick[i]);
+        }
+    }
+
+    void connectJoystick(SDL_Event &e) {
+       if (e.type == SDL_CONTROLLERDEVICEADDED) {
+            std::cout << "Controller attached for Player " << e.cdevice.which << "\n";
+            SDL_GameController *gamec = SDL_GameControllerOpen(e.cdevice.which);
+            if(gamec) {
+                std::cout << "Connected Controller " << SDL_GameControllerName(gamec) << "\n";
+                stick.push_back(gamec);
+            } else {
+                std::cout << "Failed to open controller: " << SDL_GetError() << ".\n";
+            }
+        }
+        if (e.type == SDL_CONTROLLERDEVICEREMOVED) {
+            std::cout << "Controllers disconnected.\n";
+            closeJoystick();
         }
     }
 

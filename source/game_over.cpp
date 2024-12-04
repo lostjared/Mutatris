@@ -34,11 +34,12 @@ namespace obj {
     }
     
     void GameOverObject::event(SDL_Renderer *renderer, SDL_Event &e) {
+        util::connectJoystick(e);
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_SPACE) {
             obj::setObject(new obj::IntroObject());
             obj::object->load(renderer);
             return;
-        } else if(e.type == SDL_JOYBUTTONDOWN && e.jbutton.button == 0) {
+        } else if(e.type == SDL_CONTROLLERBUTTONDOWN && e.cbutton.button == SDL_CONTROLLER_BUTTON_A) {
             obj::setObject(new obj::IntroObject());
             obj::object->load(renderer);
             return;

@@ -56,6 +56,8 @@ namespace obj {
                 obj::setObject(new obj::IntroObject());
                 obj::object->load(renderer);
         }
+        
+        util::connectJoystick(e);
     }
 
     void StartupObject::load(SDL_Renderer *renderer) {
