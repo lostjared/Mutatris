@@ -174,6 +174,19 @@ namespace obj {
         for(auto &c : util::stick) {
             handleControllerButtonRepeat(c, cur_focus, current_time);
         }
+
+        if (current_time - last_stick_time >= STICK_REPEAT_INTERVAL) {
+            for (auto &c : util::stick) {
+                if (c) {
+                    int axis_x = SDL_GameControllerGetAxis(c, SDL_CONTROLLER_AXIS_LEFTX);
+                    int axis_y = SDL_GameControllerGetAxis(c, SDL_CONTROLLER_AXIS_LEFTY);
+                    if (abs(axis_x) > 8000 || abs(axis_y) > 8000) {
+                        procStick(cur_focus, axis_x, axis_y);
+                        last_stick_time = current_time;
+                    }
+                }
+            }
+        }
     }
 
     void PuzzleObject::handleControllerButtonRepeat(SDL_GameController *controller, int cur_focus, Uint32 current_time) {
@@ -181,7 +194,7 @@ namespace obj {
             SDL_GameControllerButton button = entry.first;
             ButtonState &state = entry.second;
 
-            if (state.is_pressed) {
+            if (state.is_pressed && current_time >= state.last_repeat_time) {
                 if (current_time - state.last_repeat_time >= REPEAT_INTERVAL) {
                     procDPad(cur_focus, button);
                     state.last_repeat_time = current_time;
@@ -368,8 +381,16 @@ namespace obj {
                 paused = true;
                 return;
             }
+            if (e.type == SDL_CONTROLLERBUTTONDOWN && e.cbutton.button == SDL_CONTROLLER_BUTTON_START) {
+                paused = true;
+                return;
+            }
         } else {
             if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_SPACE) {
+                paused = false;
+            }
+            if (e.type == SDL_CONTROLLERBUTTONDOWN && 
+                (e.cbutton.button == SDL_CONTROLLER_BUTTON_START || e.cbutton.button == SDL_CONTROLLER_BUTTON_A)) {
                 paused = false;
             }
             return;
@@ -386,6 +407,17 @@ namespace obj {
             case SDL_CONTROLLERBUTTONDOWN: {
                 SDL_GameControllerButton button = static_cast<SDL_GameControllerButton>(e.cbutton.button);
                 button_states[button] = { true, current_time + REPEAT_DELAY };
+                if (button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER) {
+                    cur_focus++;
+                    if (cur_focus > 3) cur_focus = 0;
+                    break;
+                }
+                if (button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER) {
+                    cur_focus--;
+                    if (cur_focus < 0) cur_focus = 3;
+                    break;
+                }
+                procDPad(cur_focus, button);
                 break;
             }
             case SDL_CONTROLLERBUTTONUP: {
@@ -583,6 +615,55 @@ namespace obj {
                 moveBlockToPosition(lastMousePos);
             }
             break;
+
+            case SDL_JOYHATMOTION: {
+                if (!SDL_GameControllerFromInstanceID(e.jhat.which)) {
+                    procHat(cur_focus, e.jhat.value);
+                }
+                break;
+            }
+
+            case SDL_JOYAXISMOTION: {
+                if (!SDL_IsGameController(e.jaxis.which)) {
+                    if (e.jaxis.axis == 0) joy_axis_x = e.jaxis.value;
+                    if (e.jaxis.axis == 1) joy_axis_y = e.jaxis.value;
+                    Uint32 ct = SDL_GetTicks();
+                    if (ct - last_stick_time >= STICK_REPEAT_INTERVAL) {
+                        if (abs(joy_axis_x) > 8000 || abs(joy_axis_y) > 8000) {
+                            procStick(cur_focus, joy_axis_x, joy_axis_y);
+                            last_stick_time = ct;
+                        }
+                    }
+                }
+                break;
+            }
+
+            case SDL_JOYBUTTONDOWN: {
+                if (!SDL_IsGameController(e.jbutton.which)) {
+                    switch (e.jbutton.button) {
+                        case 0:
+                            game.grid[cur_focus].game_piece.shiftColors();
+                            break;
+                        case 1:
+                            game.grid[cur_focus].game_piece.shiftDirection();
+                            break;
+                        case 2:
+                            game.grid[cur_focus].game_piece.drop();
+                            break;
+                        case 4:
+                            cur_focus++;
+                            if (cur_focus > 3) cur_focus = 0;
+                            break;
+                        case 5:
+                            cur_focus--;
+                            if (cur_focus < 0) cur_focus = 3;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                break;
+            }
 
             default:
                 break;

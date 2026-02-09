@@ -56,6 +56,10 @@ namespace obj {
                 obj::setObject(new obj::IntroObject());
                 obj::object->load(renderer);
         }
+        if(e.type == SDL_CONTROLLERBUTTONDOWN && e.cbutton.button == SDL_CONTROLLER_BUTTON_A) {
+                obj::setObject(new obj::IntroObject());
+                obj::object->load(renderer);
+        }
         
         util::connectJoystick(e);
     }

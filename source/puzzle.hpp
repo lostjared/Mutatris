@@ -58,6 +58,10 @@ namespace obj {
         void handleControllerButtonRepeat(SDL_GameController *controller, int cur_focus, Uint32 current_time);
         const Uint32 REPEAT_DELAY = 300;   
         const Uint32 REPEAT_INTERVAL = 150; 
+        Uint32 last_stick_time = 0;
+        const Uint32 STICK_REPEAT_INTERVAL = 150;
+        int joy_axis_x = 0;
+        int joy_axis_y = 0;
         struct ButtonState {
             bool is_pressed;
             Uint32 last_repeat_time;

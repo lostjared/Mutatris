@@ -4,6 +4,7 @@
 namespace util {
 
     std::vector<SDL_GameController *> stick;
+    std::vector<SDL_Joystick *> joysticks;
 
     #ifdef FOR_WASM
     std::string path = "/assets";
@@ -80,37 +81,85 @@ namespace util {
     void initJoystick() {
 
         for(int i = 0; i < SDL_NumJoysticks(); ++i) {
-            SDL_GameController *stick_ = SDL_GameControllerOpen(i);
-            if(!stick_) {
-                std::cout << "Mutatris: Game Controller disabled..\n";
+            if (SDL_IsGameController(i)) {
+                SDL_GameController *stick_ = SDL_GameControllerOpen(i);
+                if(!stick_) {
+                    std::cout << "Mutatris: Game Controller disabled..\n";
+                } else {
+                    std::cout << "Mutatris: Game Controller: " << SDL_GameControllerName(stick_) << " enabled...\n";
+                }
+                stick.push_back(stick_);
             } else {
-                std::cout << "Mutatris: Game Controller: " << SDL_GameControllerName(stick_) << " enabled...\n";
+                SDL_Joystick *joy = SDL_JoystickOpen(i);
+                if (!joy) {
+                    std::cout << "Mutatris: Joystick disabled..\n";
+                } else {
+                    std::cout << "Mutatris: Joystick: " << SDL_JoystickName(joy) << " enabled...\n";
+                }
+                joysticks.push_back(joy);
             }
-            stick.push_back(stick_);
         }
         SDL_GameControllerEventState(SDL_ENABLE);
+        SDL_JoystickEventState(SDL_ENABLE);
     }
 
     void closeJoystick() {
         for(size_t i = 0; i < stick.size(); ++i) {
             SDL_GameControllerClose(stick[i]);
         }
+        stick.clear();
+        for(size_t i = 0; i < joysticks.size(); ++i) {
+            SDL_JoystickClose(joysticks[i]);
+        }
+        joysticks.clear();
     }
 
     void connectJoystick(SDL_Event &e) {
        if (e.type == SDL_CONTROLLERDEVICEADDED) {
-            std::cout << "Controller attached for Player " << e.cdevice.which << "\n";
-            SDL_GameController *gamec = SDL_GameControllerOpen(e.cdevice.which);
+            int index = e.cdevice.which;
+            std::cout << "Controller attached at index " << index << "\n";
+            SDL_GameController *gamec = SDL_GameControllerOpen(index);
             if(gamec) {
-                std::cout << "Connected Controller " << SDL_GameControllerName(gamec) << "\n";
+                std::cout << "Connected Controller: " << SDL_GameControllerName(gamec) << "\n";
                 stick.push_back(gamec);
             } else {
                 std::cout << "Failed to open controller: " << SDL_GetError() << ".\n";
             }
         }
         if (e.type == SDL_CONTROLLERDEVICEREMOVED) {
-            std::cout << "Controllers disconnected.\n";
-            closeJoystick();
+            SDL_JoystickID id = e.cdevice.which;
+            std::cout << "Controller disconnected (instance " << id << ").\n";
+            for (auto it = stick.begin(); it != stick.end(); ++it) {
+                SDL_Joystick *joy = SDL_GameControllerGetJoystick(*it);
+                if (joy && SDL_JoystickInstanceID(joy) == id) {
+                    SDL_GameControllerClose(*it);
+                    stick.erase(it);
+                    break;
+                }
+            }
+        }
+        if (e.type == SDL_JOYDEVICEADDED) {
+            int index = e.jdevice.which;
+            if (!SDL_IsGameController(index)) {
+                SDL_Joystick *joy = SDL_JoystickOpen(index);
+                if (joy) {
+                    std::cout << "Connected Joystick: " << SDL_JoystickName(joy) << "\n";
+                    joysticks.push_back(joy);
+                } else {
+                    std::cout << "Failed to open joystick: " << SDL_GetError() << "\n";
+                }
+            }
+        }
+        if (e.type == SDL_JOYDEVICEREMOVED) {
+            SDL_JoystickID id = e.jdevice.which;
+            std::cout << "Joystick disconnected (instance " << id << ").\n";
+            for (auto it = joysticks.begin(); it != joysticks.end(); ++it) {
+                if (SDL_JoystickInstanceID(*it) == id) {
+                    SDL_JoystickClose(*it);
+                    joysticks.erase(it);
+                    break;
+                }
+            }
         }
     }
 

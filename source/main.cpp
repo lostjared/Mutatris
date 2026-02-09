@@ -118,7 +118,7 @@ int main(int argc, char **argv) {
 #ifdef HAS_SOUND
     snd::init();
 #endif
-
+    full = true;
     SDL_Window* window = SDL_CreateWindow("Mutatris", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, full == true ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_SHOWN);
     if (!window) {
         SDL_Quit();

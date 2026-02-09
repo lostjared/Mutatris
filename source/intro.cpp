@@ -95,11 +95,11 @@ namespace obj {
             switch(e.cbutton.button) {
                 case SDL_CONTROLLER_BUTTON_A:
                     cur_screen = 1;
-                break;
+                    return;
             }
         }
         
-        if(cur_screen == 1 && e.type == SDL_JOYHATMOTION) {
+        if(cur_screen == 1 && e.type == SDL_JOYHATMOTION && !SDL_GameControllerFromInstanceID(e.jhat.which)) {
             switch(e.jhat.value) {
                 case 8:
                 if(cursor_pos > 0) cursor_pos--;
@@ -121,6 +121,12 @@ namespace obj {
                 obj::setObject(new PuzzleObject(cursor_pos));
                 obj::object->load(renderer);
                 return;
+                case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+                if(cursor_pos > 0) cursor_pos--;
+                break;
+                case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+                if(cursor_pos < 2) cursor_pos++;
+                break;
             }
         }
 
